@@ -3,5 +3,14 @@
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
-  ]
+  ],
+  "compilerOptions": {
+    "strict": true, // Enforce strict type checking for all referenced configs
+    "noEmit": true // Prevent root config from emitting files
+  },
+
+  
+  "types": ["jest", "node"]
+
+
 }
