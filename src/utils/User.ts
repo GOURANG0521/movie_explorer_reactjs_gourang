@@ -81,29 +81,23 @@ interface SignUpPayload {
 
 export const signUpUser = async (payload: SignUpPayload): Promise<SignUpResponse> => {
   try {
-    const response = await fetch(`${BASE_URL}/users`, {
-      method: 'POST',
+    const response = await axios.post(`${BASE_URL}/users`, payload, {
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
       },
-      body: JSON.stringify(payload),
     });
 
-    if (response.ok) {
-      const data: SignUpResponse = await response.json();
-      console.log("login response", data);
-      return data;
-    } else {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'Signup failed. Please try again.');
-    }
+    console.log("login response", response.data);
+    return response.data;
   } catch (error) {
     console.error('Signup error:', error);
+    if (axios.isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.message || 'Signup failed. Please try again.');
+    }
     throw new Error('An error occurred during signup. Please try again.');
   }
 };
-
 export interface Episode {
   id: number;
   title: string;

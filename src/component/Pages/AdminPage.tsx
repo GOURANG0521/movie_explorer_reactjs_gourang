@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -11,7 +12,6 @@ import {
   FormControl,
 } from "@mui/material";
 import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { createMovie, updateMovie } from "../../utils/User";
 import axios from "axios";
 
@@ -213,6 +213,7 @@ const AdminPage: React.FC = () => {
           variant="h5"
           fontWeight="bold"
           sx={{ fontSize: { xs: "1.5rem", sm: "2rem" } }}
+          data-testid="admin-title"
         >
           {isEditMode ? "Edit Movie" : "New Movie"}
         </Typography>
@@ -235,6 +236,7 @@ const AdminPage: React.FC = () => {
               "& .MuiInputBase-input": { color: "#fff" },
             }}
             required
+            inputProps={{ 'data-testid': 'title-input' }}
           />
           <TextField
             fullWidth
@@ -254,6 +256,7 @@ const AdminPage: React.FC = () => {
               "& .MuiInputBase-input": { color: "#fff" },
             }}
             required
+            inputProps={{ 'data-testid': 'genre-input' }}
           />
           <TextField
             fullWidth
@@ -274,6 +277,7 @@ const AdminPage: React.FC = () => {
               "& .MuiInputBase-input": { color: "#fff" },
             }}
             required
+            inputProps={{ 'data-testid': 'release-year-input' }}
           />
           <TextField
             fullWidth
@@ -293,6 +297,7 @@ const AdminPage: React.FC = () => {
               "& .MuiInputBase-input": { color: "#fff" },
             }}
             required
+            inputProps={{ 'data-testid': 'director-input' }}
           />
           <TextField
             fullWidth
@@ -313,6 +318,7 @@ const AdminPage: React.FC = () => {
               "& .MuiInputBase-input": { color: "#fff" },
             }}
             required
+            inputProps={{ 'data-testid': 'duration-input' }}
           />
           <TextField
             fullWidth
@@ -334,6 +340,7 @@ const AdminPage: React.FC = () => {
               "& .MuiInputBase-input": { color: "#fff" },
             }}
             required
+            inputProps={{ 'data-testid': 'description-input' }}
           />
           <TextField
             fullWidth
@@ -353,6 +360,7 @@ const AdminPage: React.FC = () => {
               "& .MuiInputBase-input": { color: "#fff" },
             }}
             required
+            inputProps={{ 'data-testid': 'main-lead-input' }}
           />
           <TextField
             fullWidth
@@ -372,6 +380,7 @@ const AdminPage: React.FC = () => {
               "& .MuiInputBase-input": { color: "#fff" },
             }}
             required
+            inputProps={{ 'data-testid': 'streaming-platform-input' }}
           />
           <TextField
             fullWidth
@@ -383,7 +392,7 @@ const AdminPage: React.FC = () => {
             margin="normal"
             placeholder="e.g., 8.5"
             type="number"
-            inputProps={{ step: "0.1", min: "0", max: "10" }}
+            inputProps={{ step: "0.1", min: "0", max: "10", 'data-testid': 'rating-input' }}
             sx={{
               "& .MuiOutlinedInput-root": {
                 "& fieldset": { borderColor: "#00b7bf" },
@@ -404,6 +413,7 @@ const AdminPage: React.FC = () => {
                   color: "#00b7bf",
                   "&.Mui-checked": { color: "#facc15" },
                 }}
+                inputProps={{ 'data-testid': 'premium-checkbox' }}
               />
             }
             label="Premium"
@@ -429,6 +439,7 @@ const AdminPage: React.FC = () => {
                 mt: 2,
                 textTransform: "none",
               }}
+              data-testid="poster-button"
             >
               {formData.poster ? formData.poster.name : "Choose File"}
               <input
@@ -437,6 +448,7 @@ const AdminPage: React.FC = () => {
                 hidden
                 onChange={handleFileChange}
                 accept="image/*"
+                data-testid="poster-input"
               />
             </Button>
           </FormControl>
@@ -460,6 +472,7 @@ const AdminPage: React.FC = () => {
                 mt: 2,
                 textTransform: "none",
               }}
+              data-testid="banner-button"
             >
               {formData.banner ? formData.banner.name : "Choose File"}
               <input
@@ -468,6 +481,7 @@ const AdminPage: React.FC = () => {
                 hidden
                 onChange={handleFileChange}
                 accept="image/*"
+                data-testid="banner-input"
               />
             </Button>
           </FormControl>
@@ -484,6 +498,7 @@ const AdminPage: React.FC = () => {
                 py: 1,
                 "&:hover": { bgcolor: "#e6c200" },
               }}
+              data-testid="submit-button"
             >
               {isEditMode ? "Update" : "Create"}
             </Button>
@@ -499,6 +514,7 @@ const AdminPage: React.FC = () => {
                 py: 1,
                 "&:hover": { borderColor: "#E50914" },
               }}
+              data-testid="cancel-button"
             >
               Cancel
             </Button>

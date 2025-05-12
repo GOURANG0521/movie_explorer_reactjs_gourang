@@ -155,7 +155,7 @@ const Login: React.FC = () => {
           </Typography>
         </Box>
 
-        <form onSubmit={handleLogin}>
+        <form onSubmit={handleLogin} aria-label="login-form">
           <Box sx={{ mb: 3 }}>
             <TextField
               fullWidth
@@ -203,6 +203,7 @@ const Login: React.FC = () => {
                       onClick={() => setShowPassword(!showPassword)}
                       disabled={isLoading}
                       sx={{ color: 'grey.400' }}
+                      aria-label="show password"
                     >
                       {showPassword ? <Visibility /> : <VisibilityOff />}
                     </IconButton>

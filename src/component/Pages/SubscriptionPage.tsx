@@ -22,10 +22,9 @@ import {
 } from '@mui/icons-material';
 import Header from '../Common/Header';
 import Footer from '../Common/Footer';
-// import { Plan } from './Types';
-import { createSubscription } from '../../utils/User'; // Import the new API function
+import { createSubscription } from '../../utils/User'; 
 
-// Main component
+
 interface Plan {
   id: string;
   name: string;
@@ -156,7 +155,7 @@ export default function SubscriptionPage() {
     );
   }
 
-  // Main subscription page
+  
   return (
     <Box sx={{ bgcolor: 'rgb(20, 20, 30)', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Header />

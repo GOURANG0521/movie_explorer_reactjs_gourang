@@ -24,4 +24,8 @@ dist-ssr
 *.sw?
 .babelrc
 .gitignore
-src/__tests__
+src/__tests__/Gener.test.tsx
+src/__tests__/MoviesListCheck.test.tsx
+src/__tests__/AdminPage.test.tsx
+src/__tests__/Header.test.tsx
+src/__tests__/Footer.test.tsx

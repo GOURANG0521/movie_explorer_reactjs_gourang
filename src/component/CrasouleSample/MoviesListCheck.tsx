@@ -37,7 +37,7 @@ const MoviesListCheck: React.FC = () => {
       movie.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
     setFilteredMovies(filtered);
-  }, [searchQuery]);
+  }, [searchQuery, movies]);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
@@ -69,10 +69,11 @@ const MoviesListCheck: React.FC = () => {
           <div className="mr-2 sm:mr-4 max-w-[150px] sm:max-w-xs">
             <div className="relative w-full">
               <input
-                type="text"
+                type="search"
                 placeholder="Search..."
                 value={searchQuery}
                 onChange={handleSearchChange}
+                aria-label="Search movies"
                 className="bg-gray-700 text-white placeholder-gray-400 rounded-full py-1 sm:py-2 pl-3 pr-8 focus:outline-none focus:ring-2 focus:ring-yellow-400 w-full text-xs sm:text-sm"
               />
               <FaSearch
