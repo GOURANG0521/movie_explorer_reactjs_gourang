@@ -87,12 +87,7 @@ const Carousel: React.FC<CarouselProps> = ({ title, genre }) => {
           }}
           role="button"
           tabIndex={0}
-          onClick={() => navigate('/gen')}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              navigate('/gen');
-            }
-          }}
+          onClick={() => navigate('/allmovies')}
         >
           Explore more
         </Box>
@@ -123,9 +118,6 @@ const Carousel: React.FC<CarouselProps> = ({ title, genre }) => {
             overflowX: 'auto',
             gap: 2,
             padding: 1,
-            '&::-webkit-scrollbar': {
-              height: '8px',
-            },
           }}
         >
           {error ? (

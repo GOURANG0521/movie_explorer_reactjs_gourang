@@ -177,7 +177,7 @@ const AdminPage: React.FC = () => {
         }
       }
       if (movie) {
-        navigate("/gen");
+        navigate("/allmovies");
       }
     } catch (error) {
       console.error("Error saving movie:", error);

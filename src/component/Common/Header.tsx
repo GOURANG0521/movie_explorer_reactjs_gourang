@@ -12,7 +12,7 @@ import {
   InputAdornment,
   Button,
 } from '@mui/material';
-import { signOut, getSubscriptionStatus } from '../../utils/User';
+import { signOut, getSubscriptionStatus,toggleNotifications } from '../../utils/User';
 
 const Header: React.FC = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -59,8 +59,8 @@ const Header: React.FC = () => {
     setAnchorEl(null);
   };
 
-  const handleCreateMovie = () => {
-    navigate('/admin');
+  const handleDashboard = () => {
+    navigate('/dashboard');
     handleClose();
   };
 
@@ -85,8 +85,13 @@ const Header: React.FC = () => {
     }
   };
 
-  const handleNotifications = () => {
-    console.log('Notifications clicked');
+  const handleNotifications = async () => {
+    try{
+      await toggleNotifications();
+    }
+    catch(error){
+      console.error('toggle notification error:',error);
+    }
   };
 
   const handleLoginSignup = () => {
@@ -111,7 +116,7 @@ const Header: React.FC = () => {
         <div className="flex-grow" />
 
         <div className="flex items-center space-x-2 sm:space-x-4">
-          <TextField
+          {/* <TextField
             placeholder="Search..."
             size="small"
             className="max-w-[150px] sm:max-w-xs"
@@ -138,10 +143,9 @@ const Header: React.FC = () => {
               ),
             }}
             inputProps={{ 'aria-label': 'Search movies' }}
-          />
+          /> */}
 
           <IconButton
-            onClick={handleNotifications}
             sx={{
               color: 'white',
               '&:hover': { color: '#facc15' },
@@ -174,23 +178,36 @@ const Header: React.FC = () => {
               },
             }}
           >
-            {isLoggedIn ? (
-              <>
-                {role === 'supervisor' && (
-                  <MenuItem onClick={handleCreateMovie}>Create movie</MenuItem>
-                )}
-                <MenuItem onClick={handleClose}>
-                  {role.charAt(0).toUpperCase() + role.slice(1)}
-                </MenuItem>
-                <MenuItem onClick={handleGener}>All movies</MenuItem>
-                {plan === 'basic' && (
-                  <MenuItem onClick={handleSubscription}>Buy Subscription</MenuItem>
-                )}
-                <MenuItem onClick={handleLogout}>Logout</MenuItem>
-              </>
-            ) : (
-              <MenuItem onClick={handleLoginSignup}>Please Login/Signup</MenuItem>
-            )}
+            {isLoggedIn
+              ? [
+                  role === 'supervisor' && (
+                    <MenuItem key="create-movie" onClick={handleDashboard}>
+                      Dashboard
+                    </MenuItem>
+                  ),
+                  <MenuItem key="role" onClick={handleClose}>
+                    {role.charAt(0).toUpperCase() + role.slice(1)}
+                  </MenuItem>,
+                  <MenuItem key="all-movies" onClick={handleGener}>
+                    All movies
+                  </MenuItem>,
+                  plan === 'basic' && (
+                    <MenuItem key="subscription" onClick={handleSubscription}>
+                      Buy Subscription
+                    </MenuItem>
+                  ),
+                  // <MenuItem key="notification" onClick={handleNotifications}>
+                  //   Allow  <FaBell size={20} />
+                  // </MenuItem>,
+                  <MenuItem key="logout" onClick={handleLogout}>
+                    Logout
+                  </MenuItem>,
+                ].filter(Boolean)
+              : [
+                  <MenuItem key="login-signup" onClick={handleLoginSignup}>
+                    Please Login/Signup
+                  </MenuItem>,
+                ]}
           </Menu>
         </div>
       </Toolbar>
@@ -199,3 +216,6 @@ const Header: React.FC = () => {
 };
 
 export default Header;
+
+
+

@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Box, Typography, Rating, Fab } from '@mui/material';
+import { Box, Typography, Rating, Fab, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useNavigate } from 'react-router-dom';
 import { deleteMovie } from '../../utils/User'; 
-import { FaCrown } from "react-icons/fa6";
+import { FaCrown } from 'react-icons/fa6';
 
 interface MovieItemProps {
   id: number;
@@ -32,6 +32,7 @@ const MovieItem: React.FC<MovieItemProps> = ({
 }) => {
   const [isSupervisor, setIsSupervisor] = useState<boolean>(false);
   const [isHovered, setIsHovered] = useState<boolean>(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false);
   const navigate = useNavigate();
     
   useEffect(() => {
@@ -52,18 +53,26 @@ const MovieItem: React.FC<MovieItemProps> = ({
     navigate(`/admin/${id}`);
   };
   
-  const handleDeleteClick = async (e: React.MouseEvent) => {
+  const handleDeleteClick = (e: React.MouseEvent) => {
     e.stopPropagation(); 
-    
-    if (window.confirm(`Are you sure you want to delete "${title}"?`)) {
-      try {
-        await deleteMovie(id);
-        console.log(`Movie ${id} deleted successfully`);
-      } catch (error) {
-        console.error('Error occurred while deleting movie:', error);
-        alert('Failed to delete movie. Please try again.');
-      }
+    setOpenDeleteDialog(true); 
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      await deleteMovie(id);
+      navigate('/allmovies')
+      console.log(`Movie ${id} deleted successfully`);
+    } catch (error) {
+      console.error('Error occurred while deleting movie:', error);
+      alert('Failed to delete movie. Please try again.');
     }
+    setOpenDeleteDialog(false); 
+  };
+
+  const handleCancelDelete = () => {
+    setOpenDeleteDialog(false); 
+    navigate('/gen')
   };
 
   return (
@@ -108,7 +117,6 @@ const MovieItem: React.FC<MovieItemProps> = ({
             fontWeight: 'medium',
           }}
         >
-          {/* Premium */}
           <FaCrown />
         </Box>
       )}
@@ -178,6 +186,47 @@ const MovieItem: React.FC<MovieItemProps> = ({
           {rating.toFixed(1)}
         </Typography>
       </Box>
+
+      
+      <Dialog
+        open={openDeleteDialog}
+        onClose={handleCancelDelete}
+        aria-labelledby="delete-dialog-title"
+        PaperProps={{
+          sx: {
+            backgroundColor: '#424242',
+            color: 'white',
+          },
+        }}
+      >
+        <DialogTitle id="delete-dialog-title">
+          Confirm Deletion
+        </DialogTitle>
+        <DialogContent>
+          <Typography>
+            Are you sure you want to delete "{title}"?
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={()=>{navigate('/gen')}}
+            sx={{ color: '#facc15', textTransform: 'none' }}
+          >
+            No
+          </Button>
+          <Button
+            onClick={handleConfirmDelete}
+            color="error"
+            variant="contained"
+            sx={{
+              textTransform: 'none',
+              '&:hover': { backgroundColor: '#d32f2f' },
+            }}
+          >
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

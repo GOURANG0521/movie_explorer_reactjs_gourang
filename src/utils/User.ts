@@ -558,7 +558,7 @@ export const toggleNotifications = async () => {
   try {
     const authToken = localStorage.getItem('token');
 
-    const response = await axios.patch(`${BASE_URL}/api/v1/toggle_notifications`, {
+    const response = await axios.post(`${BASE_URL}/api/v1/toggle_notifications`, {
       notifications_enabled: true,
     }, {
       headers: {
@@ -624,6 +624,22 @@ export const createSubscription = async (planType: string): Promise<string> => {
   }
 };
 
+interface SubscriptionStatus {
+    status: 'active' | 'inactive' | 'expired' | 'pending';
+    plan_name?: string;
+    price?: string;
+    duration?: string;
+    start_date?: string;
+    end_date?: string;
+  }
+  
+  interface ApiError {
+    error: string;
+  }
+
+  interface SubscriptionStatus {
+    plan_type: 'premium' | 'basic';
+  }
 
 export const getSubscriptionStatus = async (token: string): Promise<SubscriptionStatus> => {
   try {
@@ -631,7 +647,7 @@ export const getSubscriptionStatus = async (token: string): Promise<Subscription
       throw new Error('No authentication token found');
     }
 
-    const response: AxiosResponse<SubscriptionStatus | ApiError> = await axios.get(
+    const response = await axios.get(
       `${BASE_URL}/api/v1/subscriptions/status`,
       {
         headers: {
@@ -659,3 +675,32 @@ export const getSubscriptionStatus = async (token: string): Promise<Subscription
     throw new Error('An unexpected error occurred');
   }
 };
+
+
+
+export interface User {
+  id: number;
+  name: string;
+  email: string;
+  mobile_number: string;
+  role: string;
+}
+
+export async function fetchCurrentUser(): Promise<User> {
+  const token = localStorage.getItem("token");
+  try {
+    const response = await axios.get<User>('https://movie-explorer-ror-abhinav.onrender.com/api/v1/current_user', {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    if (error) {
+      throw new Error(`Failed to fetch user data: ${error.response?.statusText || error.message}`);
+    }
+    throw new Error(`API error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
+}

@@ -121,7 +121,6 @@ const MovieDetail = () => {
                 alignItems: isMobile ? 'center' : 'flex-start'
               }}
             >
-              {/* Movie Poster */}
               <Box sx={{ 
                 mr: isMobile ? 0 : 5, 
                 mb: isMobile ? 4 : 0,

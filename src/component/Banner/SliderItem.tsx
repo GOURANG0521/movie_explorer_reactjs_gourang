@@ -221,4 +221,4 @@ class SliderItem extends React.Component<SliderItemProps> {
   }
 }
 
-export default SliderItem;
+export default SliderItem; 
