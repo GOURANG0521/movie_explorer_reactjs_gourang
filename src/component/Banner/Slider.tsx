@@ -3,6 +3,7 @@ import { Box, IconButton, Typography } from "@mui/material";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import SliderItem, { Episode } from "./SliderItem";
+import {fetchSciFiMovies} from "../../utils/User"
 
 interface BigSliderProps {
   items?: Episode[];
@@ -29,44 +30,21 @@ class Slider extends React.Component<BigSliderProps, BigSliderState> {
     };
   }
 
-  componentDidMount() {
-    fetch("https://movie-explorer-ror-abhinav.onrender.com/api/v1/movies/?genre=Si-Fi")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to fetch movies");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        const moviesData = data.movies || [];
-        if (!Array.isArray(moviesData) || moviesData.length === 0) {
-          throw new Error("No movies found");
-        }
-        const movies: Episode[] = moviesData
-          .filter((movie: any) => movie.id && movie.title && movie.description && movie.banner_url && movie.poster_url)
-          .map((movie: any) => ({
-            id: movie.id.toString(),
-            title: movie.title,
-            desc: movie.description,
-            banner_url: movie.banner_url,
-            poster_url: movie.poster_url,
+
+    async componentDidMount() {
+    try {
+      const movies = await fetchSciFiMovies();
+      this.setState({ items: movies, loading: false }, () => {
+        this.timer = setInterval(() => {
+          this.setState((prevState) => ({
+            currentIndex: (prevState.currentIndex + 1) % prevState.items.length,
           }));
-        if (movies.length === 0) {
-          throw new Error("No valid movies found");
-        }
-        this.setState({ items: movies, loading: false }, () => {
-          this.timer = setInterval(() => {
-            this.setState((prevState) => ({
-              currentIndex: (prevState.currentIndex + 1) % prevState.items.length,
-            }));
-          }, 5000);
-        });
-      })
-      .catch((error) => {
-        this.setState({ error: error.message, loading: false });
+        }, 5000);
       });
+    } catch (error) {
+      this.setState({ error: error instanceof Error ? error.message : "An unknown error occurred", loading: false });
+    }
   }
-  
 
 
   componentWillUnmount() {

@@ -105,7 +105,7 @@ const Gener: React.FC = () => {
               mb: 4,
             }}
           >
-            {/* Genre Buttons */}
+          
             <Box
               sx={{
                 display: 'flex',
@@ -196,7 +196,7 @@ const Gener: React.FC = () => {
               </Button>
             </Box>
 
-            {/* Search Bar */}
+            
             <TextField
               placeholder="Search movies..."
               value={searchQuery}

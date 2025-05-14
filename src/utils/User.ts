@@ -81,28 +81,26 @@ interface SignUpPayload {
 
 export const signUpUser = async (payload: SignUpPayload): Promise<SignUpResponse> => {
   try {
-    const response = await fetch(`${BASE_URL}/users`, {
-      method: 'POST',
+    const response = await axios.post(`${BASE_URL}/users`, payload, {
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
       },
-      body: JSON.stringify(payload),
     });
 
-    if (response.ok) {
-      const data: SignUpResponse = await response.json();
-      console.log("login response", data);
-      return data;
-    } else {
-      const errorData = await response.json();
+    const data: SignUpResponse = response.data;
+    console.log('login response', data);
+    return data;
+  } catch (error: any) {
+    console.error('Signup error:', error);
+    if (error.response) {
+      const errorData = error.response.data;
       throw new Error(errorData.message || 'Signup failed. Please try again.');
     }
-  } catch (error) {
-    console.error('Signup error:', error);
     throw new Error('An error occurred during signup. Please try again.');
   }
 };
+
 
 export interface Episode {
   id: number;
@@ -122,20 +120,16 @@ export interface Episode {
   subtitles?: string;
 }
 
+
 export const fetchMovies = async (): Promise<Episode[]> => {
   try {
-    const response = await fetch(`${BASE_URL}/api/v1/movies?per_page=100`, {
-      method: 'GET',
+    const response = await axios.get(`${BASE_URL}/api/v1/movies?per_page=100`, {
       headers: {
         'Content-Type': 'application/json',
       },
     });
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch movies: ${response.statusText}`);
-    }
-
-    const data = await response.json();
+    const data = response.data;
     console.log('API Response:', data);
 
     let movies: any[] = [];
@@ -167,6 +161,64 @@ export const fetchMovies = async (): Promise<Episode[]> => {
 };
 
 
+// export const fetchMovieById = async (id: number): Promise<Episode | null> => {
+//   try {
+//     const token = localStorage.getItem('token');
+    
+//     if (!token) {
+//       window.location.href = '/';
+//       return null;
+//     }
+
+//     const planType = localStorage.getItem('plan type');
+
+//     const response = await fetch(`${BASE_URL}/api/v1/movies/${id}`, {
+//       method: 'GET',
+//       headers: {
+//         'Content-Type': 'application/json',
+//         'Authorization': `Bearer ${token}`,
+//       },
+//     });
+
+//     if (!response.ok) {
+//       throw new Error(`Failed to fetch movie: ${response.statusText}`);
+//     }
+
+//     const movie = await response.json();
+//     console.log('Single Movie Response:', movie);
+//     if (movie.premium && planType !== 'premium') {
+//       window.location.href = '/sub';
+//       return null;
+//     }
+
+//     if (!movie) {
+//       throw new Error('No movie data returned');
+//     }
+
+//     return {
+//       id: movie.id || 0,
+//       title: movie.title || 'Unknown Title',
+//       desc: movie.description || 'No description available',
+//       image: movie.poster_url || '',
+//       banner: movie.banner_url || '',
+//       starRating: movie.rating || 0,
+//       year: movie.release_year || 0,
+//       duration: movie.duration ? `${movie.duration} min` : 'N/A',
+//       genre: movie.genre || 'N/A',
+//       director: movie.director || 'N/A',
+//       main_lead: movie.main_lead || 'N/A',
+//       streaming_platform: movie.streaming_platform || 'N/A',
+//       languages: movie.languages || 'N/A',
+//       subtitles: movie.subtitles || 'N/A',
+//     };
+//   } catch (error) {
+//     console.error('Error fetching movie by ID:', error);
+//     return null;
+//   }
+// };
+
+
+
 export const fetchMovieById = async (id: number): Promise<Episode | null> => {
   try {
     const token = localStorage.getItem('token');
@@ -176,26 +228,18 @@ export const fetchMovieById = async (id: number): Promise<Episode | null> => {
       return null;
     }
 
-    
     const planType = localStorage.getItem('plan type');
 
-     
-
-    const response = await fetch(`${BASE_URL}/api/v1/movies/${id}`, {
-      method: 'GET',
+    const response = await axios.get(`${BASE_URL}/api/v1/movies/${id}`, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`,
       },
     });
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch movie: ${response.statusText}`);
-    }
-
-
-    const movie = await response.json();
+    const movie = response.data;
     console.log('Single Movie Response:', movie);
+
     if (movie.premium && planType !== 'premium') {
       window.location.href = '/sub';
       return null;
@@ -226,7 +270,6 @@ export const fetchMovieById = async (id: number): Promise<Episode | null> => {
     return null;
   }
 };
-
 
 interface Movie {
   id: number;
@@ -326,19 +369,18 @@ export const createMovie = async (formData: MovieFormData): Promise<Movie | null
   }
 };
 
+
 export const getMoviesByGenrePage = async (
   genre: string,
   page: number = 1,
   perPage: number = 10
 ): Promise<{ movies: Movie[]; total: number }> => {
   try {
-    const response = await fetch(
+    const response = await axios.get(
       `${BASE_URL}/api/v1/movies?genre=${genre}&page=${page}&per_page=${perPage}`
     );
-    if (!response.ok) {
-      throw new Error(`Failed to fetch ${genre} movies: ${response.statusText}`);
-    }
-    const data = await response.json();
+    
+    const data = response.data;
     console.log(`API response for ${genre}, page ${page}:`, data);
 
     return {
@@ -441,6 +483,7 @@ export const deleteMovie = async (movieId: number): Promise<void> => {
   }
 };
 
+
 export const signOut = async (): Promise<void> => {
   try {
     const token = localStorage.getItem('token');
@@ -448,27 +491,23 @@ export const signOut = async (): Promise<void> => {
       throw new Error('No token found');
     }
 
-    const response = await fetch(`${BASE_URL}/users/sign_out`, {
-      method: 'DELETE',
+    await axios.delete(`${BASE_URL}/users/sign_out`, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`,
       },
     });
 
-    if (response.ok) {
-      localStorage.removeItem('new user detail');
-      localStorage.removeItem('token');
-      localStorage.removeItem('plan type');
-    }
-
-    localStorage.removeItem('user');
+    localStorage.removeItem('new user detail');
     localStorage.removeItem('token');
+    localStorage.removeItem('plan type');
+    localStorage.removeItem('user');
   } catch (error) {
     console.error('Sign-out error:', error);
     throw error;
   }
 };
+
 
 export const fetchMoviesforgener = async (genre: string): Promise<Episode[]> => {
   const apiUrls: { [key: string]: string } = {
@@ -483,11 +522,10 @@ export const fetchMoviesforgener = async (genre: string): Promise<Episode[]> => 
   }
 
   try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch movies for genre: ${genre}`);
-    }
-    const data = await response.json();
+    const response = await axios.get(url);
+    const data = response.data;
+    console.log(`API response for ${genre}:`, data);
+
     const movies = Array.isArray(data) ? data : data.movies || [];
 
     return movies.map((movie: any) => ({
@@ -499,14 +537,13 @@ export const fetchMoviesforgener = async (genre: string): Promise<Episode[]> => 
       year: movie.release_year || movie.year || 0,
       duration: movie.duration ? `${movie.duration} min` : movie.duration || 'N/A',
       streaming_platform: movie.streaming_platform || 'N/A',
-      premium:movie.premium,
+      premium: movie.premium,
     }));
   } catch (error) {
     console.error(`Error fetching movies for genre ${genre}:`, error);
     throw error;
   }
 };
-
 interface UserData {
   token?: string;
 }
@@ -514,6 +551,7 @@ interface UserData {
 interface ApiErrorResponse {
   message?: string;
 }
+
 
 export const sendTokenToBackend = async (token: string): Promise<any> => {
   try {
@@ -531,25 +569,25 @@ export const sendTokenToBackend = async (token: string): Promise<any> => {
     console.log('Sending FCM token to backend:', token);
     console.log('Using auth token:', authToken);
 
-    const response = await fetch(`${BASE_URL}/api/v1/update_device_token`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${authToken}`,
-      },
-      body: JSON.stringify({ device_token: token }),
-    });
+    const response = await axios.post(
+      `${BASE_URL}/api/v1/update_device_token`,
+      { device_token: token },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`,
+        },
+      }
+    );
 
-    if (!response.ok) {
-      const errorData: ApiErrorResponse = await response.json().catch(() => ({}));
-      throw new Error(`Failed to send device token: ${response.status} ${response.statusText} - ${errorData.message || 'Unknown error'}`);
-    }
-
-    const data = await response.json();
-    console.log('Device token sent to backend successfully:', data);
-    return data;
-  } catch (error) {
+    console.log('Device token sent to backend successfully:', response.data);
+    return response.data;
+  } catch (error: any) {
     console.error('Error sending device token to backend:', error);
+    if (error.response) {
+      const errorData: ApiErrorResponse = error.response.data || {};
+      throw new Error(`Failed to send device token: ${error.response.status} - ${errorData.message || 'Unknown error'}`);
+    }
     throw error;
   }
 };
@@ -704,3 +742,31 @@ export async function fetchCurrentUser(): Promise<User> {
     throw new Error(`API error: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 }
+
+
+
+export const fetchSciFiMovies = async (): Promise<Episode[]> => {
+  try {
+    const response = await axios.get('https://movie-explorer-ror-abhinav.onrender.com/api/v1/movies/?genre=Si-Fi');
+    const data = response.data;
+    const moviesData = data.movies || [];
+    if (!Array.isArray(moviesData) || moviesData.length === 0) {
+      throw new Error('No movies found');
+    }
+    const movies: Episode[] = moviesData
+      .filter((movie: any) => movie.id && movie.title && movie.description && movie.banner_url && movie.poster_url)
+      .map((movie: any) => ({
+        id: movie.id.toString(),
+        title: movie.title,
+        desc: movie.description,
+        banner_url: movie.banner_url,
+        poster_url: movie.poster_url,
+      }));
+    if (movies.length === 0) {
+      throw new Error('No valid movies found');
+    }
+    return movies;
+  } catch (error) {
+    throw new Error(error instanceof Error ? error.message : 'An unknown error occurred');
+  }
+};

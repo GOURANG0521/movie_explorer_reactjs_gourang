@@ -5,6 +5,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useNavigate } from 'react-router-dom';
 import { deleteMovie } from '../../utils/User'; 
 import { FaCrown } from 'react-icons/fa6';
+import { toast } from 'react-toastify';
 
 interface MovieItemProps {
   id: number;
@@ -58,21 +59,50 @@ const MovieItem: React.FC<MovieItemProps> = ({
     setOpenDeleteDialog(true); 
   };
 
-  const handleConfirmDelete = async () => {
+  const handleConfirmDelete = async (e: React.MouseEvent) => {
+    e.stopPropagation(); 
     try {
+      console.log(`Attempting to delete movie: ${title} (ID: ${id})`);
       await deleteMovie(id);
-      navigate('/allmovies')
-      console.log(`Movie ${id} deleted successfully`);
+      console.log(`Successfully deleted movie: ${title}`);
+      toast.success(`Movie "${title}" deleted successfully!`, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "dark",
+        style: { backgroundColor: '#4caf50', color: 'white' }, 
+      });
+      setTimeout(() => {
+        console.log(`Navigating to /allmovies after deleting ${title}`);
+        navigate('/allmovies', { replace: true });
+      }, 1000);
     } catch (error) {
-      console.error('Error occurred while deleting movie:', error);
-      alert('Failed to delete movie. Please try again.');
+      console.error(`Error deleting movie ${title}:`, error);
+      toast.error('Failed to delete movie. Please try again.', {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "dark",
+        style: { backgroundColor: '#d32f2f', color: 'white' }, 
+      });
     }
+    setOpenDeleteDialog(false);
+  };
+
+  const handleCancelDelete = (e?: React.MouseEvent) => {
+    e?.stopPropagation(); 
     setOpenDeleteDialog(false); 
   };
 
-  const handleCancelDelete = () => {
-    setOpenDeleteDialog(false); 
-    navigate('/gen')
+  const handleBoxClick = (e: React.MouseEvent) => {
+    if (openDeleteDialog) return; 
+    onClick();
   };
 
   return (
@@ -84,7 +114,7 @@ const MovieItem: React.FC<MovieItemProps> = ({
         '&:hover': { opacity: 0.9 },
         position: 'relative',
       }}
-      onClick={onClick}
+      onClick={handleBoxClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -187,7 +217,6 @@ const MovieItem: React.FC<MovieItemProps> = ({
         </Typography>
       </Box>
 
-      
       <Dialog
         open={openDeleteDialog}
         onClose={handleCancelDelete}
@@ -196,6 +225,7 @@ const MovieItem: React.FC<MovieItemProps> = ({
           sx: {
             backgroundColor: '#424242',
             color: 'white',
+            zIndex: 10000,
           },
         }}
       >
@@ -209,7 +239,7 @@ const MovieItem: React.FC<MovieItemProps> = ({
         </DialogContent>
         <DialogActions>
           <Button
-            onClick={()=>{navigate('/gen')}}
+            onClick={handleCancelDelete}
             sx={{ color: '#facc15', textTransform: 'none' }}
           >
             No

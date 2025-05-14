@@ -10,8 +10,7 @@ import {
   InputLabel,
   FormControl,
 } from "@mui/material";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import { createMovie, updateMovie } from "../../utils/User";
 import axios from "axios";
 
@@ -60,7 +59,7 @@ const getMovieById = async (id: number): Promise<Movie | null> => {
       timeout: 10000,
     });
 
-    console.log("API response:", response.data);
+    console.log("API response for getMovieById:", response.data);
 
     const movieData = response.data.movie || response.data.data || response.data;
     if (!movieData || typeof movieData !== "object") {
@@ -148,47 +147,56 @@ const AdminPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      let movie;
       if (isEditMode) {
-        movie = await updateMovie(Number(id), formData);
-        if (movie) {
-          toast.success("Movie updated successfully!", {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            theme: "dark",
-          });
-        }
+        console.log(`Attempting to update movie: ${formData.title} (ID: ${id})`);
+        const response = await updateMovie(Number(id), formData);
+        console.log(`updateMovie response:`, response);
+        console.log(`Successfully updated movie: ${formData.title}`);
+        toast.success("Movie updated successfully!", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "dark",
+          style: { backgroundColor: '#4caf50', color: 'white' }, 
+        });
+        setTimeout(() => {
+          console.log(`Navigating to /allmovies after updating ${formData.title}`);
+          navigate("/allmovies", { replace: true });
+        }, 1000);
       } else {
-        movie = await createMovie(formData);
-        if (movie) {
-          toast.success("Movie created successfully!", {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            theme: "dark",
-          });
-        }
-      }
-      if (movie) {
-        navigate("/allmovies");
+        console.log(`Attempting to create movie: ${formData.title}`);
+        const response = await createMovie(formData);
+        console.log(`createMovie response:`, response);
+        console.log(`Successfully created movie: ${formData.title}`);
+        toast.success("Movie created successfully!", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "dark",
+          style: { backgroundColor: '#4caf50', color: 'white' }, 
+        });
+        setTimeout(() => {
+          console.log(`Navigating to /allmovies after creating ${formData.title}`);
+          navigate("/allmovies", { replace: true });
+        }, 1000);
       }
     } catch (error) {
       console.error("Error saving movie:", error);
       toast.error("Failed to save movie. Please try again.", {
         position: "top-right",
         autoClose: 3000,
-        hideProgressBar: false,
+        hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
         theme: "dark",
+        style: { backgroundColor: '#d32f2f', color: 'white' }, 
       });
     }
   };
@@ -504,7 +512,6 @@ const AdminPage: React.FC = () => {
             </Button>
           </Box>
         </form>
-        <ToastContainer />
       </Box>
     </Box>
   );
