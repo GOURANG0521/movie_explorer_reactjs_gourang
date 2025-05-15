@@ -737,15 +737,23 @@ export async function fetchCurrentUser(): Promise<User> {
     return response.data;
   } catch (error) {
     if (error) {
-      throw new Error(`Failed to fetch user data: ${error.response?.statusText || error.message}`);
+      throw new Error('Failed to fetch user data');
     }
-    throw new Error(`API error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error('Unknown error');
   }
 }
 
 
+export interface MovieSiFi {
+  id: number;
+  title: string;
+  desc: string;
+  banner_url?: string;  
+  poster_url?: string;
+}
 
-export const fetchSciFiMovies = async (): Promise<Episode[]> => {
+
+export const fetchSciFiMovies = async (): Promise<MovieSiFi[]> => {
   try {
     const response = await axios.get(`${BASE_URL}/api/v1/movies/?genre=Si-Fi`);
     const data = response.data;
@@ -753,7 +761,7 @@ export const fetchSciFiMovies = async (): Promise<Episode[]> => {
     if (!Array.isArray(moviesData) || moviesData.length === 0) {
       throw new Error('No movies found');
     }
-    const movies: Episode[] = moviesData
+    const movies: MovieSiFi[] = moviesData
       .filter((movie: any) => movie.id && movie.title && movie.description && movie.banner_url && movie.poster_url)
       .map((movie: any) => ({
         id: movie.id.toString(),

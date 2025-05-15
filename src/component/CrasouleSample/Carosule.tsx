@@ -133,8 +133,8 @@ const Carousel: React.FC<CarouselProps> = ({ title, genre }) => {
                 rating={item.starRating}
                 year={item.year}
                 duration={item.duration}
-                streaming_platform={item.streaming_platform}
-                premium={item.premium}
+                streaming_platform={item.streaming_platform || 'Unknown'}
+                premium={item.premium ?? false}
                 onClick={() => handleMovieClick(item.id)}
               />
             ))

@@ -172,3 +172,4 @@ class Slider extends React.Component<BigSliderProps, BigSliderState> {
 }
 
 export default Slider;
+

@@ -249,31 +249,53 @@ const UserDashboard = () => {
               <List>
                 {userData.role === 'supervisor' && (
                   <Box>
-                    <ListItem
+                    <Box
                       component="button"
-                      button
                       onClick={handleAddMovieClick}
-                      sx={{ '&:hover': { bgcolor: '#1E1E1E' } }}
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        width: '100%',
+                        px: 2,
+                        py: 1.5,
+                        bgcolor: '#000000',
+                        border: 'none',
+                        cursor: 'pointer',
+                        '&:hover': { bgcolor: '#1E1E1E' },
+                      }}
                     >
-                      <ListItemIcon sx={{ bgcolor: '#1E1E1E', p: 1, borderRadius: 1, mr: 2, color: '#FFD700' }}>
+                      <Box sx={{ bgcolor: '#1E1E1E', p: 1, borderRadius: 1, mr: 2, color: '#FFD700' }}>
                         <Movie sx={{ color: '#FFD700' }} />
-                      </ListItemIcon>
-                      <ListItemText primary="Add New Movie" primaryTypographyProps={{ color: '#FFFFFF' }} />
+                      </Box>
+                      <Typography sx={{ flexGrow: 1, color: '#FFFFFF', textAlign: 'left' }}>
+                        Add New Movie
+                      </Typography>
                       <ChevronRight sx={{ color: '#FFD700' }} />
-                    </ListItem>
+                    </Box>
 
-                    <ListItem
+                    <Box
                       component="button"
-                      button
                       onClick={handleUpdateMovieClick}
-                      sx={{ '&:hover': { bgcolor: '#1E1E1E' } }}
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        width: '100%',
+                        px: 2,
+                        py: 1.5,
+                        bgcolor: '#000000',
+                        border: 'none',
+                        cursor: 'pointer',
+                        '&:hover': { bgcolor: '#1E1E1E' },
+                      }}
                     >
-                      <ListItemIcon sx={{ bgcolor: '#1E1E1E', p: 1, borderRadius: 1, mr: 2, color: '#FFD700' }}>
+                      <Box sx={{ bgcolor: '#1E1E1E', p: 1, borderRadius: 1, mr: 2, color: '#FFD700' }}>
                         <Movie sx={{ color: '#FFD700' }} />
-                      </ListItemIcon>
-                      <ListItemText primary="Update Movie" primaryTypographyProps={{ color: '#FFFFFF' }} />
+                      </Box>
+                      <Typography sx={{ flexGrow: 1, color: '#FFFFFF', textAlign: 'left' }}>
+                        Update Movie
+                      </Typography>
                       <ChevronRight sx={{ color: '#FFD700' }} />
-                    </ListItem>
+                    </Box>
                   </Box>
                 )}
                 <ListItem sx={{ '&:hover': { bgcolor: '#1E1E1E' } }}>

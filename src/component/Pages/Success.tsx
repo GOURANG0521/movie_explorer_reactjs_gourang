@@ -45,8 +45,7 @@ const Success = () => {
         setLoading(false);
       } catch (err) {
         console.error('Error verifying subscription:', err);
-        setError(err.response?.data?.error ||'Failed to verify subscription. Please try again.'
-        );
+        setError('Failed to verify subscription. Please try again.');
         setLoading(false);
       }
     };
