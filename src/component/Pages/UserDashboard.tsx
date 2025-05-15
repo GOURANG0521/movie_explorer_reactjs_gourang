@@ -16,7 +16,6 @@ import {
 } from '@mui/material';
 import {
   Person,
-  Settings,
   Logout,
   Email,
   Phone,
@@ -45,8 +44,8 @@ const UserDashboard = () => {
         const data = await fetchCurrentUser();
         setUserData(data);
         setLoading(false);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load user data');
+      } catch (err: unknown) {
+        setError('Failed to load user data');
         setLoading(false);
       }
     };
@@ -69,8 +68,8 @@ const UserDashboard = () => {
     try {
       await toggleNotifications();
       setNotificationsEnabled(enabled);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to toggle notifications');
+    } catch (err: unknown) {
+      setError('Failed to toggle notifications');
     }
   };
 
@@ -234,7 +233,6 @@ const UserDashboard = () => {
             <Divider sx={{ my: 2, bgcolor: '#B0B0B0' }} />
           </Paper>
 
-          
           <Box sx={{ flex: { md: '0 0 67%' } }}>
             <Paper sx={{ bgcolor: '#000000', mb: 3 }}>
               <Box
@@ -251,29 +249,31 @@ const UserDashboard = () => {
               <List>
                 {userData.role === 'supervisor' && (
                   <Box>
-                  <ListItem
-                    button
-                    onClick={handleAddMovieClick}
-                    sx={{ '&:hover': { bgcolor: '#1E1E1E' } }}
-                  >
-                    <ListItemIcon sx={{ bgcolor: '#1E1E1E', p: 1, borderRadius: 1, mr: 2, color: '#FFD700' }}>
-                      <Movie sx={{ color: '#FFD700' }} />
-                    </ListItemIcon>
-                    <ListItemText primary="Add New Movie" primaryTypographyProps={{ color: '#FFFFFF' }} />
-                    <ChevronRight sx={{ color: '#FFD700' }} />
-                  </ListItem>
+                    <ListItem
+                      component="button"
+                      button
+                      onClick={handleAddMovieClick}
+                      sx={{ '&:hover': { bgcolor: '#1E1E1E' } }}
+                    >
+                      <ListItemIcon sx={{ bgcolor: '#1E1E1E', p: 1, borderRadius: 1, mr: 2, color: '#FFD700' }}>
+                        <Movie sx={{ color: '#FFD700' }} />
+                      </ListItemIcon>
+                      <ListItemText primary="Add New Movie" primaryTypographyProps={{ color: '#FFFFFF' }} />
+                      <ChevronRight sx={{ color: '#FFD700' }} />
+                    </ListItem>
 
-                  <ListItem
-                    button
-                    onClick={handleUpdateMovieClick}
-                    sx={{ '&:hover': { bgcolor: '#1E1E1E' } }}
-                  >
-                    <ListItemIcon sx={{ bgcolor: '#1E1E1E', p: 1, borderRadius: 1, mr: 2, color: '#FFD700' }}>
-                      <Movie sx={{ color: '#FFD700' }} />
-                    </ListItemIcon>
-                    <ListItemText primary="Update Movie" primaryTypographyProps={{ color: '#FFFFFF' }} />
-                    <ChevronRight sx={{ color: '#FFD700' }} />
-                  </ListItem>
+                    <ListItem
+                      component="button"
+                      button
+                      onClick={handleUpdateMovieClick}
+                      sx={{ '&:hover': { bgcolor: '#1E1E1E' } }}
+                    >
+                      <ListItemIcon sx={{ bgcolor: '#1E1E1E', p: 1, borderRadius: 1, mr: 2, color: '#FFD700' }}>
+                        <Movie sx={{ color: '#FFD700' }} />
+                      </ListItemIcon>
+                      <ListItemText primary="Update Movie" primaryTypographyProps={{ color: '#FFFFFF' }} />
+                      <ChevronRight sx={{ color: '#FFD700' }} />
+                    </ListItem>
                   </Box>
                 )}
                 <ListItem sx={{ '&:hover': { bgcolor: '#1E1E1E' } }}>
