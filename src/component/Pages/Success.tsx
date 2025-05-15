@@ -10,8 +10,6 @@ import {
 import { CheckCircle } from '@mui/icons-material';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
-// import Header from '../../components/common/Header';
-// import Footer from '../../components/common/Footer';
 
 const Success = () => {
   const [loading, setLoading] = useState(true);
@@ -65,7 +63,7 @@ const Success = () => {
         flexDirection: 'column',
       }}
     >
-      {/* <Header /> */}
+      
       <Box
         sx={{
           flex: 1,

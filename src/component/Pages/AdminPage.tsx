@@ -9,10 +9,10 @@ import {
   Button,
   InputLabel,
   FormControl,
+  CircularProgress,
 } from "@mui/material";
 import { toast } from "react-toastify";
-import { createMovie, updateMovie } from "../../utils/User";
-import axios from "axios";
+import { createMovie, updateMovie, getMovieById } from "../../utils/User";
 
 interface MovieFormData {
   title: string;
@@ -45,34 +45,6 @@ interface Movie {
   banner?: string;
 }
 
-const getMovieById = async (id: number): Promise<Movie | null> => {
-  try {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      throw new Error("No authentication token found");
-    }
-    const response = await axios.get(`https://movie-explorer-ror-abhinav.onrender.com/api/v1/movies/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: "application/json",
-      },
-      timeout: 10000,
-    });
-
-    console.log("API response for getMovieById:", response.data);
-
-    const movieData = response.data.movie || response.data.data || response.data;
-    if (!movieData || typeof movieData !== "object") {
-      throw new Error("Movie data not found in response");
-    }
-
-    return movieData as Movie;
-  } catch (error: any) {
-    console.error("Error fetching movie:", error.message);
-    return null;
-  }
-};
-
 const AdminPage: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
@@ -92,6 +64,8 @@ const AdminPage: React.FC = () => {
     banner: null,
     isPremium: false,
   });
+
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -146,6 +120,7 @@ const AdminPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     try {
       if (isEditMode) {
         console.log(`Attempting to update movie: ${formData.title} (ID: ${id})`);
@@ -160,7 +135,7 @@ const AdminPage: React.FC = () => {
           pauseOnHover: true,
           draggable: true,
           theme: "dark",
-          style: { backgroundColor: '#4caf50', color: 'white' }, 
+          style: { backgroundColor: '#4caf50', color: 'white' },
         });
         setTimeout(() => {
           console.log(`Navigating to /allmovies after updating ${formData.title}`);
@@ -179,7 +154,7 @@ const AdminPage: React.FC = () => {
           pauseOnHover: true,
           draggable: true,
           theme: "dark",
-          style: { backgroundColor: '#4caf50', color: 'white' }, 
+          style: { backgroundColor: '#4caf50', color: 'white' },
         });
         setTimeout(() => {
           console.log(`Navigating to /allmovies after creating ${formData.title}`);
@@ -196,8 +171,10 @@ const AdminPage: React.FC = () => {
         pauseOnHover: true,
         draggable: true,
         theme: "dark",
-        style: { backgroundColor: '#d32f2f', color: 'white' }, 
+        style: { backgroundColor: '#d32f2f', color: 'white' },
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -315,7 +292,7 @@ const AdminPage: React.FC = () => {
               "& .MuiOutlinedInput-root": {
                 "& fieldset": { borderColor: "#00b7bf" },
                 "&:hover fieldset": { borderColor: "#E50914" },
-                "&.Mui-focused fieldset": { borderColor: "#facc15" },
+                "&.Mui-focused fieldset": { borderColor: "#facc fruits15" },
               },
               "& .MuiInputLabel-root": { color: "#fff" },
               "& .MuiInputBase-input": { color: "#fff" },
@@ -483,6 +460,7 @@ const AdminPage: React.FC = () => {
             <Button
               type="submit"
               variant="contained"
+              disabled={loading}
               sx={{
                 bgcolor: "#E50914",
                 color: "#181818",
@@ -491,9 +469,19 @@ const AdminPage: React.FC = () => {
                 px: 3,
                 py: 1,
                 "&:hover": { bgcolor: "#e6c200" },
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
               }}
             >
-              {isEditMode ? "Update" : "Create"}
+              {loading ? (
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                  <CircularProgress size={24} sx={{ color: "white" }} />
+                  <Typography sx={{color:'white'}}>Loading</Typography>
+                </Box>
+              ) : (
+                isEditMode ? "Update" : "Create"
+              )}
             </Button>
             <Button
               variant="outlined"

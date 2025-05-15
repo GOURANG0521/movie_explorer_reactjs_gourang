@@ -20,7 +20,6 @@ import {
   ArrowForward,
   CheckCircle,
 } from '@mui/icons-material';
-import Header from '../Common/Header';
 import Footer from '../Common/Footer';
 import { createSubscription } from '../../utils/User'; 
 
@@ -114,7 +113,6 @@ export default function SubscriptionPage() {
   if (showSuccess) {
     return (
       <Box sx={{ bgcolor: 'rgb(20, 20, 30)', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-        <Header />
         <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', p: 3 }}>
           <Paper
             elevation={3}
@@ -158,7 +156,6 @@ export default function SubscriptionPage() {
   
   return (
     <Box sx={{ bgcolor: 'rgb(20, 20, 30)', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <Header />
       <Box sx={{ flex: 1, py: 6 }}>
         <Container maxWidth="lg">
           <Box sx={{ textAlign: 'center', mb: 6 }}>

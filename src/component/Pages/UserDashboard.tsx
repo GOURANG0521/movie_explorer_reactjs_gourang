@@ -29,7 +29,6 @@ import {
 import { useNavigate } from 'react-router-dom';
 import img from '../../assets/Images/userImage.jpg';
 import { fetchCurrentUser, User, toggleNotifications, signOut } from '../../utils/User';
-import Header from '../Common/Header';
 
 const UserDashboard = () => {
   const [userData, setUserData] = useState<User | null>(null);
@@ -88,6 +87,10 @@ const UserDashboard = () => {
     navigate('/admin');
   };
 
+  const handleUpdateMovieClick = () => {
+    navigate('/allmovies');
+  };
+
   const handleImageError = () => {
     setImageError(true);
   };
@@ -141,7 +144,6 @@ const UserDashboard = () => {
 
   return (
     <Box sx={{ minHeight: '100vh', bgcolor: '#000000' }}>
-      <Header />
       <Paper sx={{ bgcolor: '#000000', boxShadow: 1 }}>
         <Box
           sx={{
@@ -248,6 +250,7 @@ const UserDashboard = () => {
               </Box>
               <List>
                 {userData.role === 'supervisor' && (
+                  <Box>
                   <ListItem
                     button
                     onClick={handleAddMovieClick}
@@ -259,6 +262,19 @@ const UserDashboard = () => {
                     <ListItemText primary="Add New Movie" primaryTypographyProps={{ color: '#FFFFFF' }} />
                     <ChevronRight sx={{ color: '#FFD700' }} />
                   </ListItem>
+
+                  <ListItem
+                    button
+                    onClick={handleUpdateMovieClick}
+                    sx={{ '&:hover': { bgcolor: '#1E1E1E' } }}
+                  >
+                    <ListItemIcon sx={{ bgcolor: '#1E1E1E', p: 1, borderRadius: 1, mr: 2, color: '#FFD700' }}>
+                      <Movie sx={{ color: '#FFD700' }} />
+                    </ListItemIcon>
+                    <ListItemText primary="Update Movie" primaryTypographyProps={{ color: '#FFFFFF' }} />
+                    <ChevronRight sx={{ color: '#FFD700' }} />
+                  </ListItem>
+                  </Box>
                 )}
                 <ListItem sx={{ '&:hover': { bgcolor: '#1E1E1E' } }}>
                   <ListItemIcon sx={{ bgcolor: '#1E1E1E', p: 1, borderRadius: 1, mr: 2, color: '#FFD700' }}>

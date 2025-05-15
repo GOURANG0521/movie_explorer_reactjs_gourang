@@ -12,7 +12,6 @@ import {
 } from '@mui/material';
 import { Search } from '@mui/icons-material';
 import MovieItem from '../CrasouleSample/MovieItem';
-import Header from '../Common/Header';
 
 interface Movie {
   id: number;
@@ -92,7 +91,6 @@ const Gener: React.FC = () => {
 
   return (
     <div>
-      <Header />
       <Box className="p-6 bg-black text-white min-h-screen">
         <Box className="mb-6">
           <Box

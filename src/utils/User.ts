@@ -727,7 +727,7 @@ export interface User {
 export async function fetchCurrentUser(): Promise<User> {
   const token = localStorage.getItem("token");
   try {
-    const response = await axios.get<User>('https://movie-explorer-ror-abhinav.onrender.com/api/v1/current_user', {
+    const response = await axios.get<User>(`${BASE_URL}/api/v1/current_user`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
@@ -747,7 +747,7 @@ export async function fetchCurrentUser(): Promise<User> {
 
 export const fetchSciFiMovies = async (): Promise<Episode[]> => {
   try {
-    const response = await axios.get('https://movie-explorer-ror-abhinav.onrender.com/api/v1/movies/?genre=Si-Fi');
+    const response = await axios.get(`${BASE_URL}/api/v1/movies/?genre=Si-Fi`);
     const data = response.data;
     const moviesData = data.movies || [];
     if (!Array.isArray(moviesData) || moviesData.length === 0) {
@@ -768,5 +768,36 @@ export const fetchSciFiMovies = async (): Promise<Episode[]> => {
     return movies;
   } catch (error) {
     throw new Error(error instanceof Error ? error.message : 'An unknown error occurred');
+  }
+};
+
+
+
+
+export const getMovieById = async (id: number): Promise<Movie | null> => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      throw new Error("No authentication token found");
+    }
+    const response = await axios.get(`${BASE_URL}/api/v1/movies/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+      },
+      timeout: 10000,
+    });
+
+    console.log("API response for getMovieById:", response.data);
+
+    const movieData = response.data.movie || response.data.data || response.data;
+    if (!movieData || typeof movieData !== "object") {
+      throw new Error("Movie data not found in response");
+    }
+
+    return movieData as Movie;
+  } catch (error: any) {
+    console.error("Error fetching movie:", error.message);
+    return null;
   }
 };
