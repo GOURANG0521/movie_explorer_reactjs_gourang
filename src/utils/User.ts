@@ -744,16 +744,9 @@ export async function fetchCurrentUser(): Promise<User> {
 }
 
 
-export interface MovieSiFi {
-  id: number;
-  title: string;
-  desc: string;
-  banner_url?: string;  
-  poster_url?: string;
-}
 
 
-export const fetchSciFiMovies = async (): Promise<MovieSiFi[]> => {
+export const fetchSciFiMovies = async (): Promise<Episode[]> => {
   try {
     const response = await axios.get(`${BASE_URL}/api/v1/movies/?genre=Si-Fi`);
     const data = response.data;
@@ -761,7 +754,7 @@ export const fetchSciFiMovies = async (): Promise<MovieSiFi[]> => {
     if (!Array.isArray(moviesData) || moviesData.length === 0) {
       throw new Error('No movies found');
     }
-    const movies: MovieSiFi[] = moviesData
+    const movies: Episode[] = moviesData
       .filter((movie: any) => movie.id && movie.title && movie.description && movie.banner_url && movie.poster_url)
       .map((movie: any) => ({
         id: movie.id.toString(),
