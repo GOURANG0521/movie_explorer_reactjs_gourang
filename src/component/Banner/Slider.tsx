@@ -18,7 +18,7 @@ interface BigSliderState {
 
 
 class Slider extends React.Component<BigSliderProps, BigSliderState> {
-  private timer: NodeJS.Timeout | null = null;
+  private timer: number | null = null;
 
   constructor(props: BigSliderProps) {
     super(props);

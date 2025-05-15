@@ -5,7 +5,6 @@ import {
   Typography,
   Button, 
   Rating, 
-  Grid, 
   CircularProgress,
   useMediaQuery,
   useTheme,
@@ -186,7 +185,7 @@ const MovieDetail = () => {
                   justifyContent: isMobile ? 'center' : 'flex-start'
                 }}>
                   <Box sx={{ 
-                    bgcolor: 'linear-gradient(45deg, #e50914, #f43f5e)', 
+                    background: 'linear-gradient(45deg, #e50914, #f43f5e)', 
                     borderRadius: '6px', 
                     px: 2, 
                     py: 1, 
@@ -308,8 +307,8 @@ const MovieDetail = () => {
       <Container maxWidth="lg" sx={{ px: { xs: 3, sm: 4, md: 5 }, pb: 8 }}>
         <Fade in={fadeIn} timeout={1500}>
           <Box>
-            <Grid container spacing={4} sx={{ mb: 6 }}>
-              <Grid xs={12} md={6}>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 4, mb: 6 }}>
+              <Box sx={{ width: { xs: '100%', md: 'calc(50% - 16px)' } }}>
                 <Paper elevation={0} sx={{
                   borderRadius: 4,
                   overflow: 'hidden',
@@ -339,8 +338,12 @@ const MovieDetail = () => {
                       Cast & Production
                     </Typography>
                     
-                    <Grid container spacing={2} sx={{ flexGrow: 1 }}>
-                      <Grid xs={12} sm={4}>
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, flexGrow: 1 }}>
+                      <Box sx={{ 
+                        width: { xs: '100%', sm: 'calc(33.33% - 8px)' }, 
+                        display: 'flex', 
+                        justifyContent: 'center' 
+                      }}>
                         <Box 
                           sx={{
                             display: 'flex',
@@ -381,9 +384,13 @@ const MovieDetail = () => {
                             {movie.director || 'N/A'}
                           </Typography>
                         </Box>
-                      </Grid>
+                      </Box>
                       
-                      <Grid xs={12} sm={4}>
+                      <Box sx={{ 
+                        width: { xs: '100%', sm: 'calc(33.33% - 8px)' }, 
+                        display: 'flex', 
+                        justifyContent: 'center' 
+                      }}>
                         <Box 
                           sx={{
                             display: 'flex',
@@ -424,9 +431,13 @@ const MovieDetail = () => {
                             {movie.main_lead || 'N/A'}
                           </Typography>
                         </Box>
-                      </Grid>
+                      </Box>
                       
-                      <Grid xs={12} sm={4}>
+                      <Box sx={{ 
+                        width: { xs: '100%', sm: 'calc(33.33% - 8px)' }, 
+                        display: 'flex', 
+                        justifyContent: 'center' 
+                      }}>
                         <Box 
                           sx={{
                             display: 'flex',
@@ -467,13 +478,13 @@ const MovieDetail = () => {
                             {movie.streaming_platform || 'N/A'}
                           </Typography>
                         </Box>
-                      </Grid>
-                    </Grid>
+                      </Box>
+                    </Box>
                   </Box>
                 </Paper>
-              </Grid>
+              </Box>
 
-              <Grid xs={12} md={6}>
+              <Box sx={{ width: { xs: '100%', md: 'calc(50% - 16px)' } }}>
                 <Paper elevation={0} sx={{
                   borderRadius: 4,
                   overflow: 'hidden',
@@ -484,7 +495,7 @@ const MovieDetail = () => {
                     bgcolor: '#111827',
                     p: { xs: 2, sm: 3 },
                     borderRadius: 4, 
-                    width: '580px',
+                    width: '100%',
                     display: 'flex',
                     flexDirection: 'column',
                     height: 260
@@ -525,8 +536,8 @@ const MovieDetail = () => {
                     </Stack>
                   </Box>
                 </Paper>
-              </Grid>
-            </Grid>
+              </Box>
+            </Box>
 
             <Paper elevation={0} sx={{
               borderRadius: 10,

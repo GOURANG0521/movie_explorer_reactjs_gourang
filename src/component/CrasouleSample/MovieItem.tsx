@@ -95,9 +95,11 @@ const MovieItem: React.FC<MovieItemProps> = ({
     setOpenDeleteDialog(false);
   };
 
-  const handleCancelDelete = (e?: React.MouseEvent) => {
-    e?.stopPropagation(); 
-    setOpenDeleteDialog(false); 
+  const handleCancelDelete = (event: {}, reason: 'backdropClick' | 'escapeKeyDown') => {
+    if (event && 'stopPropagation' in event) {
+      (event as React.MouseEvent).stopPropagation();
+    }
+    setOpenDeleteDialog(false);
   };
 
   const handleBoxClick = (e: React.MouseEvent) => {
