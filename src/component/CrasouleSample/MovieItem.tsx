@@ -3,7 +3,7 @@ import { Box, Typography, Rating, Fab, Dialog, DialogTitle, DialogContent, Dialo
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useNavigate } from 'react-router-dom';
-import { deleteMovie } from '../../utils/User'; 
+import { deleteMovie } from '../../utils/User';
 import { FaCrown } from 'react-icons/fa6';
 import { toast } from 'react-toastify';
 
@@ -15,19 +15,19 @@ interface MovieItemProps {
   rating: number;
   year: number;
   duration: string;
-  streaming_platform: string; 
+  streaming_platform: string;
   premium: boolean;
   onClick: () => void;
 }
 
-const MovieItem: React.FC<MovieItemProps> = ({ 
-  id, 
-  title, 
-  image, 
-  rating, 
-  year, 
-  duration, 
-  streaming_platform, 
+const MovieItem: React.FC<MovieItemProps> = ({
+  id,
+  title,
+  image,
+  rating,
+  year,
+  duration,
+  streaming_platform,
   premium,
   onClick,
 }) => {
@@ -35,32 +35,33 @@ const MovieItem: React.FC<MovieItemProps> = ({
   const [isHovered, setIsHovered] = useState<boolean>(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false);
   const navigate = useNavigate();
-    
+
   useEffect(() => {
-    const storedData = localStorage.getItem('new user detail'); 
+    console.log(`MovieItem image for ${title}:`, image); // Log image prop
+    const storedData = localStorage.getItem('new user detail');
     if (storedData) {
       try {
         const userData = JSON.parse(storedData);
         setIsSupervisor(userData.role === 'supervisor');
       } catch (err) {
         console.error('Error parsing local storage data:', err);
-        setIsSupervisor(false); 
+        setIsSupervisor(false);
       }
     }
-  }, []);
+  }, [image, title]);
 
   const handleEditClick = (e: React.MouseEvent) => {
-    e.stopPropagation(); 
+    e.stopPropagation();
     navigate(`/admin/${id}`);
   };
-  
+
   const handleDeleteClick = (e: React.MouseEvent) => {
-    e.stopPropagation(); 
-    setOpenDeleteDialog(true); 
+    e.stopPropagation();
+    setOpenDeleteDialog(true);
   };
 
   const handleConfirmDelete = async (e: React.MouseEvent) => {
-    e.stopPropagation(); 
+    e.stopPropagation();
     try {
       console.log(`Attempting to delete movie: ${title} (ID: ${id})`);
       await deleteMovie(id);
@@ -73,7 +74,7 @@ const MovieItem: React.FC<MovieItemProps> = ({
         pauseOnHover: true,
         draggable: true,
         theme: "dark",
-        style: { backgroundColor: '#4caf50', color: 'white' }, 
+        style: { backgroundColor: '#4caf50', color: 'white' },
       });
       setTimeout(() => {
         console.log(`Navigating to /allmovies after deleting ${title}`);
@@ -89,21 +90,23 @@ const MovieItem: React.FC<MovieItemProps> = ({
         pauseOnHover: true,
         draggable: true,
         theme: "dark",
-        style: { backgroundColor: '#d32f2f', color: 'white' }, 
+        style: { backgroundColor: '#d32f2f', color: 'white' },
       });
     }
     setOpenDeleteDialog(false);
   };
 
-  const handleCancelDelete = (event: {}, reason: 'backdropClick' | 'escapeKeyDown') => {
-    if (event && 'stopPropagation' in event) {
-      (event as React.MouseEvent).stopPropagation();
-    }
+  const handleCancelDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setOpenDeleteDialog(false);
+  };
+
+  const handleDialogClose = (event: {}, reason: 'backdropClick' | 'escapeKeyDown') => {
     setOpenDeleteDialog(false);
   };
 
   const handleBoxClick = (e: React.MouseEvent) => {
-    if (openDeleteDialog) return; 
+    if (openDeleteDialog) return;
     onClick();
   };
 
@@ -154,7 +157,7 @@ const MovieItem: React.FC<MovieItemProps> = ({
       )}
       {isSupervisor && (
         <>
-          <EditIcon 
+          <EditIcon
             onClick={handleEditClick}
             sx={{
               position: 'absolute',
@@ -166,12 +169,12 @@ const MovieItem: React.FC<MovieItemProps> = ({
               padding: '4px',
               fontSize: '20px',
               cursor: 'pointer',
-              '&:hover': { color: '#facc15' }, 
+              '&:hover': { color: '#facc15' },
             }}
           />
-          <Fab 
-            size="small" 
-            color="error" 
+          <Fab
+            size="small"
+            color="error"
             aria-label="delete"
             onClick={handleDeleteClick}
             sx={{
@@ -183,7 +186,7 @@ const MovieItem: React.FC<MovieItemProps> = ({
               backgroundColor: 'rgba(211, 47, 47, 0.9)',
               opacity: isHovered ? 1 : 0,
               transition: 'opacity 0.2s ease-in-out',
-              '&:hover': { 
+              '&:hover': {
                 backgroundColor: 'rgba(211, 47, 47, 1)',
               },
             }}
@@ -193,13 +196,16 @@ const MovieItem: React.FC<MovieItemProps> = ({
         </>
       )}
       <img
-        src={image}
+        src={image || 'https://via.placeholder.com/200x250?text=No+Image'}
         alt={title}
         style={{
           width: '100%',
           height: 250,
           objectFit: 'cover',
           borderRadius: 8,
+        }}
+        onError={(e) => {
+          e.currentTarget.src = 'https://via.placeholder.com/200x250?text=No+Image';
         }}
       />
       <Typography sx={{ color: 'white', mt: 1, fontWeight: 'medium' }}>{title}</Typography>
@@ -221,7 +227,7 @@ const MovieItem: React.FC<MovieItemProps> = ({
 
       <Dialog
         open={openDeleteDialog}
-        onClose={handleCancelDelete}
+        onClose={handleDialogClose}
         aria-labelledby="delete-dialog-title"
         PaperProps={{
           sx: {

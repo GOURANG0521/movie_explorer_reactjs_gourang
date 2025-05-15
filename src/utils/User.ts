@@ -746,6 +746,34 @@ export async function fetchCurrentUser(): Promise<User> {
 
 
 
+// export const fetchSciFiMovies = async (): Promise<Episode[]> => {
+//   try {
+//     const response = await axios.get(`${BASE_URL}/api/v1/movies/?genre=Si-Fi`);
+//     const data = response.data;
+//     const moviesData = data.movies || [];
+//     if (!Array.isArray(moviesData) || moviesData.length === 0) {
+//       throw new Error('No movies found');
+//     }
+//     const movies: Episode[] = moviesData
+//       .filter((movie: any) => movie.id && movie.title && movie.description && movie.banner_url && movie.poster_url)
+//       .map((movie: any) => ({
+//         id: movie.id.toString(),
+//         title: movie.title,
+//         desc: movie.description,
+//         banner_url: movie.banner_url,
+//         poster_url: movie.poster_url,
+//       }));
+//     if (movies.length === 0) {
+//       throw new Error('No valid movies found');
+//     }
+//     return movies;
+//   } catch (error) {
+//     throw new Error(error instanceof Error ? error.message : 'An unknown error occurred');
+//   }
+// };
+
+
+
 export const fetchSciFiMovies = async (): Promise<Episode[]> => {
   try {
     const response = await axios.get(`${BASE_URL}/api/v1/movies/?genre=Si-Fi`);
@@ -760,8 +788,14 @@ export const fetchSciFiMovies = async (): Promise<Episode[]> => {
         id: movie.id.toString(),
         title: movie.title,
         desc: movie.description,
+        image: movie.image || movie.banner_url || 'https://via.placeholder.com/300x450?text=No+Image',
+        starRating: movie.starRating || 0,
+        year: movie.year || 0,
+        duration: movie.duration || 'N/A',
         banner_url: movie.banner_url,
         poster_url: movie.poster_url,
+        streaming_platform: movie.streaming_platform || undefined,
+        premium: movie.premium || undefined,
       }));
     if (movies.length === 0) {
       throw new Error('No valid movies found');
@@ -771,7 +805,6 @@ export const fetchSciFiMovies = async (): Promise<Episode[]> => {
     throw new Error(error instanceof Error ? error.message : 'An unknown error occurred');
   }
 };
-
 
 
 
