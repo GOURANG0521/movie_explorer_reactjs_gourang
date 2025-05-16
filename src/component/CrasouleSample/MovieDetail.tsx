@@ -338,9 +338,18 @@ const MovieDetail = () => {
                       Cast & Production
                     </Typography>
                     
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, flexGrow: 1 }}>
+                    <Box sx={{ 
+                      display: 'flex', 
+                      flexDirection: 'row', 
+                      flexWrap: 'nowrap', 
+                      gap: 2, 
+                      flexGrow: 1,
+                      justifyContent: isMobile ? 'center' : 'space-between'
+                    }}>
                       <Box sx={{ 
-                        width: { xs: '100%', sm: 'calc(33.33% - 8px)' }, 
+                        flex: 1, 
+                        minWidth: 100, 
+                        maxWidth: 140, 
                         display: 'flex', 
                         justifyContent: 'center' 
                       }}>
@@ -387,7 +396,9 @@ const MovieDetail = () => {
                       </Box>
                       
                       <Box sx={{ 
-                        width: { xs: '100%', sm: 'calc(33.33% - 8px)' }, 
+                        flex: 1, 
+                        minWidth: 100, 
+                        maxWidth: 140, 
                         display: 'flex', 
                         justifyContent: 'center' 
                       }}>
@@ -434,7 +445,9 @@ const MovieDetail = () => {
                       </Box>
                       
                       <Box sx={{ 
-                        width: { xs: '100%', sm: 'calc(33.33% - 8px)' }, 
+                        flex: 1, 
+                        minWidth: 100, 
+                        maxWidth: 140, 
                         display: 'flex', 
                         justifyContent: 'center' 
                       }}>

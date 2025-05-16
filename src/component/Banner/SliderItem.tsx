@@ -203,7 +203,7 @@ class SliderItem extends React.Component<SliderItemProps> {
                 </Box>
               </Fade>
 
-              <Fade in={isActive} timeout={800} style={{ transitionDelay: isActive ? "800ms" : "0ms" }}>
+              {/* <Fade in={isActive} timeout={800} style={{ transitionDelay: isActive ? "800ms" : "0ms" }}>
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mt: 2, justifyContent: { xs: "center", md: "flex-start" } }}>
                   <Typography variant="body2" color="#fff" sx={{ fontWeight: 500, fontFamily: "'Roboto', sans-serif" }}>
                     Subscribe for ₹99/month
@@ -212,8 +212,8 @@ class SliderItem extends React.Component<SliderItemProps> {
                     Watch with a Prime membership
                   </Typography>
                 </Box>
-              </Fade>
-            </Box>
+              </Fade> */}
+            </Box> 
           </Box>
         </Box>
       </Box>

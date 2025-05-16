@@ -18,7 +18,6 @@ import { onMessage } from 'firebase/messaging';
 function AppContent() {
   const location = useLocation();
   
-  // Hide header on login, signup, and user info (mapped to UserDashboard)
   const hideHeaderPaths = ["/", "/signup"];
   
   const showHeader = !hideHeaderPaths.includes(location.pathname);

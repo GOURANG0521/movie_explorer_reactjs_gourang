@@ -46,7 +46,7 @@ export default function SubscriptionPage() {
     {
       id: '1_day',
       name: '1 Day Pass',
-      price: '$1.99',
+      price: '199',
       features: [
         'Full access to all movies',
         'Unlimited streaming',
@@ -58,13 +58,12 @@ export default function SubscriptionPage() {
     {
       id: '1_month',
       name: '7 Day Pass',
-      price: '$7.99',
+      price: '799',
       features: [
         'Full access to all movies',
         'Unlimited streaming',
         'HD & 4K quality',
-        'No ads',
-        'Offline downloads',
+        'Priority customer support',
       ],
       duration: '7 days of premium access',
       popular: true,
@@ -72,15 +71,12 @@ export default function SubscriptionPage() {
     {
       id: '3_months',
       name: '1 Month Premium',
-      price: '$19.99',
+      price: '1999',
       features: [
         'Full access to all movies',
-        'Unlimited streaming',
-        'HD & 4K quality',
-        'No ads',
+        'Early access to new releases',
         'Offline downloads',
         'Priority customer support',
-        'Early access to new releases',
       ],
       duration: '30 days of premium access',
     },
