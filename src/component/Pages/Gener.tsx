@@ -75,6 +75,14 @@ const Gener: React.FC = () => {
     window.scrollTo(0, 0);
   }, [genre, searchQuery, currentPage]);
 
+  const handleDeleteMovie = (id: number) => {
+    const updatedAllMovies = allMovies.filter((movie) => movie.id !== id);
+    setAllMovies(updatedAllMovies);
+
+      const updatedMovies = movies.filter((movie) => movie.id !== id);
+      setMovies(updatedMovies);
+  };
+
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const query = event.target.value;
     setSearchParams({ genre, query, page: '1' });
@@ -103,7 +111,6 @@ const Gener: React.FC = () => {
               mb: 4,
             }}
           >
-          
             <Box
               sx={{
                 display: 'flex',
@@ -194,7 +201,6 @@ const Gener: React.FC = () => {
               </Button>
             </Box>
 
-            
             <TextField
               placeholder="Search movies..."
               value={searchQuery}
@@ -251,6 +257,7 @@ const Gener: React.FC = () => {
                     streaming_platform={movie.streaming_platform}
                     premium={movie.premium}
                     onClick={() => navigate(`/movie/${movie.id}`)}
+                    onDelete={handleDeleteMovie} 
                   />
                 ))
               ) : (

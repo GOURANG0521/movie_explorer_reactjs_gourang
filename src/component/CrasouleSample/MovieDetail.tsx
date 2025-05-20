@@ -281,6 +281,7 @@ const MovieDetail = () => {
                     startIcon={<PlayArrowIcon />}
                     fullWidth={isMobile}
                     sx={{ 
+                      fontSize: { xs: '1rem', sm: '1rem' },
                       bgcolor: '#e50914', 
                       textTransform: 'none', 
                       px: 4, 
@@ -323,7 +324,7 @@ const MovieDetail = () => {
                     width: '100%',
                     display: 'flex',
                     flexDirection: 'column',
-                    height: 260
+                    height: { xs: 'auto', md: 260 }
                   }}>
                     <Typography 
                       variant="h4" 
@@ -342,14 +343,14 @@ const MovieDetail = () => {
                       display: 'flex', 
                       flexDirection: 'row', 
                       flexWrap: 'nowrap', 
-                      gap: 2, 
+                      gap: { xs: 1, sm: 2 }, 
                       flexGrow: 1,
-                      justifyContent: isMobile ? 'center' : 'space-between'
+                      justifyContent: isMobile ? 'space-between' : 'space-between'
                     }}>
                       <Box sx={{ 
                         flex: 1, 
-                        minWidth: 100, 
-                        maxWidth: 140, 
+                        minWidth: { xs: 90, sm: 100 }, 
+                        maxWidth: { xs: 100, sm: 140 }, 
                         display: 'flex', 
                         justifyContent: 'center' 
                       }}>
@@ -359,11 +360,11 @@ const MovieDetail = () => {
                             flexDirection: 'column',
                             alignItems: 'center',
                             textAlign: 'center',
-                            p: 2,
+                            p: { xs: 1, sm: 2 },
                             bgcolor: 'rgba(255, 255, 255, 0.05)',
                             borderRadius: '50%',
-                            height: 140,
-                            width: 140,
+                            height: { xs: 100, sm: 140 },
+                            width: { xs: 100, sm: 140 },
                             border: '1px solid rgba(229, 9, 20, 0.2)',
                             boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
                             justifyContent: 'center',
@@ -373,21 +374,44 @@ const MovieDetail = () => {
                           <Box sx={{
                             bgcolor: 'rgba(229, 9, 20, 0.2)',
                             borderRadius: '50%',
-                            p: 1.5,
-                            mb: 1
+                            p: { xs: 1, sm: 1.5 },
+                            mb: { xs: 0.5, sm: 1 }
                           }}>
-                            <VideocamIcon sx={{ fontSize: 24, color: '#e50914' }} />
+                            <VideocamIcon sx={{ fontSize: { xs: 18, sm: 24 }, color: '#e50914' }} />
                           </Box>
-                          <Typography variant="body2" sx={{ mb: 0.5, color: '#9ca3af', fontWeight: 'medium', fontSize: '0.85rem' }}>Director</Typography>
+                          <Typography 
+                            variant="body2" 
+                            sx={{ 
+                              mb: 0.5, 
+                              color: '#9ca3af', 
+                              fontWeight: 'medium', 
+                              fontSize: (theme) => {
+                                const directorLength = (movie.director || 'N/A').length;
+                                return directorLength > 15 
+                                  ? { xs: '0.5rem', sm: '0.85rem' }
+                                  : { xs: '0.65rem', sm: '0.85rem' };
+                              },
+                              whiteSpace: 'normal',
+                              overflowWrap: 'break-word'
+                            }}
+                          >
+                            Director
+                          </Typography>
                           <Typography 
                             variant="body1" 
                             sx={{ 
                               fontWeight: 'medium', 
-                              overflow: 'hidden', 
-                              textOverflow: 'ellipsis',
                               width: '100%',
                               color: '#f3f4f6',
-                              fontSize: '0.9rem'
+                              fontSize: (theme) => {
+                                const directorLength = (movie.director || 'N/A').length;
+                                return directorLength > 15 
+                                  ? { xs: '0.5rem', sm: '0.9rem' }
+                                  : { xs: '0.7rem', sm: '0.9rem' };
+                              },
+                              whiteSpace: 'normal',
+                              overflowWrap: 'break-word',
+                              px: { xs: 0.5, sm: 1 }
                             }}
                           >
                             {movie.director || 'N/A'}
@@ -397,8 +421,8 @@ const MovieDetail = () => {
                       
                       <Box sx={{ 
                         flex: 1, 
-                        minWidth: 100, 
-                        maxWidth: 140, 
+                        minWidth: { xs: 90, sm: 100 }, 
+                        maxWidth: { xs: 100, sm: 140 }, 
                         display: 'flex', 
                         justifyContent: 'center' 
                       }}>
@@ -408,11 +432,11 @@ const MovieDetail = () => {
                             flexDirection: 'column',
                             alignItems: 'center',
                             textAlign: 'center',
-                            p: 2,
-                            bgcolor: 'rgba(255, 255, 255, 0.05)',
+                            p: { xs: 1, sm: 2 },
+                            bgcolor: 'rgba(255, 255, 231, 0.05)',
                             borderRadius: '50%',
-                            height: 140,
-                            width: 140,
+                            height: { xs: 100, sm: 140 },
+                            width: { xs: 100, sm: 140 },
                             border: '1px solid rgba(229, 9, 20, 0.2)',
                             boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
                             justifyContent: 'center',
@@ -422,21 +446,44 @@ const MovieDetail = () => {
                           <Box sx={{
                             bgcolor: 'rgba(229, 9, 20, 0.2)',
                             borderRadius: '50%',
-                            p: 1.5,
-                            mb: 1
+                            p: { xs: 1, sm: 1.5 },
+                            mb: { xs: 0.5, sm: 1 }
                           }}>
-                            <PersonIcon sx={{ fontSize: 24, color: '#e50914' }} />
+                            <PersonIcon sx={{ fontSize: { xs: 18, sm: 24 }, color: '#e50914' }} />
                           </Box>
-                          <Typography variant="body2" sx={{ mb: 0.5, color: '#9ca3af', fontWeight: 'medium', fontSize: '0.85rem' }}>Main Lead</Typography>
+                          <Typography 
+                            variant="body2" 
+                            sx={{ 
+                              mb: 0.5, 
+                              color: '#9ca3af', 
+                              fontWeight: 'medium', 
+                              fontSize: (theme) => {
+                                const mainLeadLength = (movie.main_lead || 'N/A').length;
+                                return mainLeadLength > 15 
+                                  ? { xs: '0.5rem', sm: '0.85rem' }
+                                  : { xs: '0.65rem', sm: '0.85rem' };
+                              },
+                              whiteSpace: 'normal',
+                              overflowWrap: 'break-word'
+                            }}
+                          >
+                            Main Lead
+                          </Typography>
                           <Typography 
                             variant="body1" 
                             sx={{ 
                               fontWeight: 'medium', 
-                              overflow: 'hidden', 
-                              textOverflow: 'ellipsis',
                               width: '100%',
                               color: '#f3f4f6',
-                              fontSize: '0.9rem'
+                              fontSize: (theme) => {
+                                const mainLeadLength = (movie.main_lead || 'N/A').length;
+                                return mainLeadLength > 15 
+                                  ? { xs: '0.5rem', sm: '0.9rem' }
+                                  : { xs: '0.7rem', sm: '0.9rem' };
+                              },
+                              whiteSpace: 'normal',
+                              overflowWrap: 'break-word',
+                              px: { xs: 0.5, sm: 1 }
                             }}
                           >
                             {movie.main_lead || 'N/A'}
@@ -446,8 +493,8 @@ const MovieDetail = () => {
                       
                       <Box sx={{ 
                         flex: 1, 
-                        minWidth: 100, 
-                        maxWidth: 140, 
+                        minWidth: { xs: 90, sm: 100 }, 
+                        maxWidth: { xs: 100, sm: 140 }, 
                         display: 'flex', 
                         justifyContent: 'center' 
                       }}>
@@ -457,11 +504,11 @@ const MovieDetail = () => {
                             flexDirection: 'column',
                             alignItems: 'center',
                             textAlign: 'center',
-                            p: 2,
+                            p: { xs: 1, sm: 2 },
                             bgcolor: 'rgba(255, 255, 255, 0.05)',
                             borderRadius: '50%',
-                            height: 140,
-                            width: 140,
+                            height: { xs: 100, sm: 140 },
+                            width: { xs: 100, sm: 140 },
                             border: '1px solid rgba(229, 9, 20, 0.2)',
                             boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
                             justifyContent: 'center',
@@ -471,21 +518,44 @@ const MovieDetail = () => {
                           <Box sx={{
                             bgcolor: 'rgba(229, 9, 20, 0.2)',
                             borderRadius: '50%',
-                            p: 1.5,
-                            mb: 1
+                            p: { xs: 1, sm: 1.5 },
+                            mb: { xs: 0.5, sm: 1 }
                           }}>
-                            <TvIcon sx={{ fontSize: 24, color: '#e50914' }} />
+                            <TvIcon sx={{ fontSize: { xs: 18, sm: 24 }, color: '#e50914' }} />
                           </Box>
-                          <Typography variant="body2" sx={{ mb: 0.5, color: '#9ca3af', fontWeight: 'medium', fontSize: '0.85rem' }}>Available On</Typography>
+                          <Typography 
+                            variant="body2" 
+                            sx={{ 
+                              mb: 0.5, 
+                              color: '#9ca3af', 
+                              fontWeight: 'medium', 
+                              fontSize: (theme) => {
+                                const platformLength = (movie.streaming_platform || 'N/A').length;
+                                return platformLength > 15 
+                                  ? { xs: '0.5rem', sm: '0.85rem' }
+                                  : { xs: '0.65rem', sm: '0.85rem' };
+                              },
+                              whiteSpace: 'normal',
+                              overflowWrap: 'break-word'
+                            }}
+                          >
+                            Available On
+                          </Typography>
                           <Typography 
                             variant="body1" 
                             sx={{ 
                               fontWeight: 'medium', 
-                              overflow: 'hidden', 
-                              textOverflow: 'ellipsis',
                               width: '100%',
                               color: '#f3f4f6',
-                              fontSize: '0.9rem'
+                              fontSize: (theme) => {
+                                const platformLength = (movie.streaming_platform || 'N/A').length;
+                                return platformLength > 15 
+                                  ? { xs: '0.5rem', sm: '0.9rem' }
+                                  : { xs: '0.7rem', sm: '0.9rem' };
+                              },
+                              whiteSpace: 'normal',
+                              overflowWrap: 'break-word',
+                              px: { xs: 0.5, sm: 1 }
                             }}
                           >
                             {movie.streaming_platform || 'N/A'}
@@ -496,7 +566,7 @@ const MovieDetail = () => {
                   </Box>
                 </Paper>
               </Box>
-
+              
               <Box sx={{ width: { xs: '100%', md: 'calc(50% - 16px)' } }}>
                 <Paper elevation={0} sx={{
                   borderRadius: 4,

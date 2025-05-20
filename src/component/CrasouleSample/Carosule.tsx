@@ -52,6 +52,14 @@ const Carousel: React.FC<CarouselProps> = ({ title, genre }) => {
     navigate(`/movie/${id}`);
   };
 
+  const handleDeleteMovie = (id: number) => {
+    const updatedMovies = moviesData.filter((movie) => movie.id !== id);
+    setMoviesData(updatedMovies);
+    if (updatedMovies.length === 0) {
+      setError(`No ${genre} movies found`);
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -136,6 +144,7 @@ const Carousel: React.FC<CarouselProps> = ({ title, genre }) => {
                 streaming_platform={item.streaming_platform || 'Unknown'}
                 premium={item.premium ?? false}
                 onClick={() => handleMovieClick(item.id)}
+                onDelete={handleDeleteMovie} 
               />
             ))
           ) : (

@@ -18,6 +18,7 @@ interface MovieItemProps {
   streaming_platform: string;
   premium: boolean;
   onClick: () => void;
+  onDelete: (id: number) => void; 
 }
 
 const MovieItem: React.FC<MovieItemProps> = ({
@@ -30,6 +31,7 @@ const MovieItem: React.FC<MovieItemProps> = ({
   streaming_platform,
   premium,
   onClick,
+  onDelete,
 }) => {
   const [isSupervisor, setIsSupervisor] = useState<boolean>(false);
   const [isHovered, setIsHovered] = useState<boolean>(false);
@@ -37,7 +39,6 @@ const MovieItem: React.FC<MovieItemProps> = ({
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(`MovieItem image for ${title}:`, image); // Log image prop
     const storedData = localStorage.getItem('new user detail');
     if (storedData) {
       try {
@@ -48,7 +49,7 @@ const MovieItem: React.FC<MovieItemProps> = ({
         setIsSupervisor(false);
       }
     }
-  }, [image, title]);
+  }, []);
 
   const handleEditClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -76,10 +77,7 @@ const MovieItem: React.FC<MovieItemProps> = ({
         theme: "dark",
         style: { backgroundColor: '#4caf50', color: 'white' },
       });
-      setTimeout(() => {
-        console.log(`Navigating to /allmovies after deleting ${title}`);
-        navigate('/allmovies', { replace: true });
-      }, 1000);
+      onDelete(id); 
     } catch (error) {
       console.error(`Error deleting movie ${title}:`, error);
       toast.error('Failed to delete movie. Please try again.', {

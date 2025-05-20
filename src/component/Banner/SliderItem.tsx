@@ -53,7 +53,7 @@ class SliderItem extends React.Component<SliderItemProps> {
               width: "100%",
               height: "100%",
               objectFit: "cover",
-              filter: "brightness(0.85)", 
+              filter: "brightness(0.85)",
             }}
           />
           <Box
@@ -75,24 +75,21 @@ class SliderItem extends React.Component<SliderItemProps> {
             top: { xs: "8%", sm: "12%", md: "100px" },
             bottom: { xs: "8%", sm: "12%", md: "25%" },
             left: { xs: 12, sm: 20, md: 60 },
-            maxWidth: { xs: "95%", sm: "85%", md: "55%" },
+            maxWidth: { xs: "90%", sm: "85%", md: "55%" },
             zIndex: 2,
             display: "flex",
             flexDirection: { xs: "column", md: "row" },
-            gap: { xs: 2, md: 3 },
+            gap: { xs: 1, md: 3 },
             alignItems: { xs: "center", md: "flex-start" },
           }}
         >
-          
           <Fade in={isActive} timeout={800} style={{ transitionDelay: isActive ? "200ms" : "0ms" }}>
             <Box
-              component="img"
-              src={episode.poster_url}
-              alt={`${episode.title} poster`}
               sx={{
-                width: { xs: "70%", sm: "200px", md: "260px" },
-                height: "auto",
+                width: { xs: "180px", sm: "540px" },
+                height: { xs: "270px", sm: "300px" },
                 borderRadius: 10,
+                overflow: "hidden",
                 boxShadow: "0 6px 20px rgba(0,0,0,0.5)",
                 transition: "transform 0.3s ease, box-shadow 0.3s ease",
                 "&:hover": {
@@ -100,10 +97,21 @@ class SliderItem extends React.Component<SliderItemProps> {
                   boxShadow: "0 10px 28px rgba(255,215,0,0.5)",
                 },
               }}
-            />
+            >
+              <Box
+                component="img"
+                src={episode.poster_url || "https://via.placeholder.com/180x270?text=Poster+Not+Found"}
+                alt={`${episode.title} poster`}
+                sx={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  display: "block",
+                }}
+              />
+            </Box>
           </Fade>
 
-          
           <Box sx={{ display: "flex", flexDirection: "column", textAlign: { xs: "center", md: "left" } }}>
             <Fade in={isActive} timeout={800} style={{ transitionDelay: isActive ? "400ms" : "0ms" }}>
               <Typography
@@ -202,18 +210,7 @@ class SliderItem extends React.Component<SliderItemProps> {
                   </Button>
                 </Box>
               </Fade>
-
-              {/* <Fade in={isActive} timeout={800} style={{ transitionDelay: isActive ? "800ms" : "0ms" }}>
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mt: 2, justifyContent: { xs: "center", md: "flex-start" } }}>
-                  <Typography variant="body2" color="#fff" sx={{ fontWeight: 500, fontFamily: "'Roboto', sans-serif" }}>
-                    Subscribe for ₹99/month
-                  </Typography>
-                  <Typography variant="body2" color="#fff" sx={{ fontWeight: 500, fontFamily: "'Roboto', sans-serif" }}>
-                    Watch with a Prime membership
-                  </Typography>
-                </Box>
-              </Fade> */}
-            </Box> 
+            </Box>
           </Box>
         </Box>
       </Box>
@@ -221,4 +218,4 @@ class SliderItem extends React.Component<SliderItemProps> {
   }
 }
 
-export default SliderItem; 
+export default SliderItem;

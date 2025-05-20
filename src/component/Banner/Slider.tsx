@@ -3,7 +3,7 @@ import { Box, IconButton, Typography } from "@mui/material";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import SliderItem, { Episode } from "./SliderItem";
-import {fetchSciFiMovies} from "../../utils/User"
+import { fetchSciFiMovies } from "../../utils/User";
 
 interface BigSliderProps {
   items?: Episode[];
@@ -15,7 +15,6 @@ interface BigSliderState {
   loading: boolean;
   error: string | null;
 }
-
 
 class Slider extends React.Component<BigSliderProps, BigSliderState> {
   private timer: number | null = null;
@@ -30,8 +29,7 @@ class Slider extends React.Component<BigSliderProps, BigSliderState> {
     };
   }
 
-
-    async componentDidMount() {
+  async componentDidMount() {
     try {
       const movies = await fetchSciFiMovies();
       this.setState({ items: movies, loading: false }, () => {
@@ -45,7 +43,6 @@ class Slider extends React.Component<BigSliderProps, BigSliderState> {
       this.setState({ error: error instanceof Error ? error.message : "An unknown error occurred", loading: false });
     }
   }
-
 
   componentWillUnmount() {
     if (this.timer) {
@@ -172,4 +169,3 @@ class Slider extends React.Component<BigSliderProps, BigSliderState> {
 }
 
 export default Slider;
-

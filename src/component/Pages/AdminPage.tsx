@@ -10,6 +10,9 @@ import {
   InputLabel,
   FormControl,
   CircularProgress,
+  Select,
+  MenuItem,
+  SelectChangeEvent,
 } from "@mui/material";
 import { toast } from "react-toastify";
 import { createMovie, updateMovie, getMovieById } from "../../utils/User";
@@ -102,7 +105,9 @@ const AdminPage: React.FC = () => {
     }
   }, [navigate, id, isEditMode]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent<string>
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -221,25 +226,34 @@ const AdminPage: React.FC = () => {
             }}
             required
           />
-          <TextField
-            fullWidth
-            label="Genre"
-            name="genre"
-            value={formData.genre}
-            onChange={handleChange}
-            variant="outlined"
-            margin="normal"
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": { borderColor: "#00b7bf" },
-                "&:hover fieldset": { borderColor: "#E50914" },
-                "&.Mui-focused fieldset": { borderColor: "#facc15" },
-              },
-              "& .MuiInputLabel-root": { color: "#fff" },
-              "& .MuiInputBase-input": { color: "#fff" },
-            }}
-            required
-          />
+          <FormControl fullWidth margin="normal">
+            <InputLabel
+              sx={{
+                color: "#fff",
+                "&.Mui-focused": { color: "#facc15" },
+              }}
+            >
+              Genre
+            </InputLabel>
+            <Select
+              name="genre"
+              value={formData.genre}
+              onChange={handleChange}
+              sx={{
+                "& .MuiOutlinedInput-notchedOutline": { borderColor: "#00b7bf" },
+                "&:hover .MuiOutlinedInput-notchedOutline": { borderColor: "#E50914" },
+                "&.Mui-focused .MuiOutlinedInput-notchedOutline": { borderColor: "#facc15" },
+                "& .MuiSelect-select": { color: "#fff" },
+                "& .MuiSvgIcon-root": { color: "#fff" },
+              }}
+              required
+            >
+              <MenuItem value="Si-Fi">Sci-Fi</MenuItem>
+              <MenuItem value="Action">Action</MenuItem>
+              <MenuItem value="Thriller">Thriller</MenuItem>
+              <MenuItem value="Romance">Romance</MenuItem>
+            </Select>
+          </FormControl>
           <TextField
             fullWidth
             label="Release Year"
@@ -339,25 +353,33 @@ const AdminPage: React.FC = () => {
             }}
             required
           />
-          <TextField
-            fullWidth
-            label="Streaming Platform"
-            name="streamingPlatform"
-            value={formData.streamingPlatform}
-            onChange={handleChange}
-            variant="outlined"
-            margin="normal"
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": { borderColor: "#00b7bf" },
-                "&:hover fieldset": { borderColor: "#E50914" },
-                "&.Mui-focused fieldset": { borderColor: "#facc15" },
-              },
-              "& .MuiInputLabel-root": { color: "#fff" },
-              "& .MuiInputBase-input": { color: "#fff" },
-            }}
-            required
-          />
+          <FormControl fullWidth margin="normal">
+            <InputLabel
+              sx={{
+                color: "#fff",
+                "&.Mui-focused": { color: "#facc15" },
+              }}
+            >
+              Streaming Platform
+            </InputLabel>
+            <Select
+              name="streamingPlatform"
+              value={formData.streamingPlatform}
+              onChange={handleChange}
+              sx={{
+                "& .MuiOutlinedInput-notchedOutline": { borderColor: "#00b7bf" },
+                "&:hover .MuiOutlinedInput-notchedOutline": { borderColor: "#E50914" },
+                "&.Mui-focused .MuiOutlinedInput-notchedOutline": { borderColor: "#facc15" },
+                "& .MuiSelect-select": { color: "#fff" },
+                "& .MuiSvgIcon-root": { color: "#fff" },
+              }}
+              required
+            >
+              <MenuItem value="Amazon">Amazon</MenuItem>
+              <MenuItem value="Netflix">Netflix</MenuItem>
+              <MenuItem value="HBO">HBO</MenuItem>
+            </Select>
+          </FormControl>
           <TextField
             fullWidth
             label="Rating"
@@ -477,7 +499,7 @@ const AdminPage: React.FC = () => {
               {loading ? (
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                   <CircularProgress size={24} sx={{ color: "white" }} />
-                  <Typography sx={{color:'white'}}>Loading</Typography>
+                  <Typography sx={{ color: "white" }}>Loading</Typography>
                 </Box>
               ) : (
                 isEditMode ? "Update" : "Create"

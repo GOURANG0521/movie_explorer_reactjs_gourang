@@ -14,11 +14,12 @@ import UserDashboard from './component/Pages/UserDashboard';
 import Header from './component/Common/Header';
 import { generateToken, messaging } from './notifications/firebase';
 import { onMessage } from 'firebase/messaging';
+import NotFound from './component/Pages/NotFound';
 
 function AppContent() {
   const location = useLocation();
   
-  const hideHeaderPaths = ["/", "/signup"];
+  const hideHeaderPaths = ["/", "/signup","*"];
   
   const showHeader = !hideHeaderPaths.includes(location.pathname);
 
@@ -48,6 +49,7 @@ function AppContent() {
         <Route path="/sub" element={<SubscriptionPage />} />
         <Route path="/success" element={<Success />} />
         <Route path="/dashboard" element={<UserDashboard />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
   );
