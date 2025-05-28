@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { getMoviesByGenrePage, searchMoviesByTitle } from '../../utils/User';
 import {
@@ -9,8 +9,14 @@ import {
   Pagination,
   TextField,
   InputAdornment,
+  List,
+  ListItem,
+  ListItemText,
+  Paper,
 } from '@mui/material';
 import { Search } from '@mui/icons-material';
+import * as fuzzball from 'fuzzball';
+import debounce from 'lodash.debounce';
 import MovieItem from '../CrasouleSample/MovieItem';
 
 interface Movie {
@@ -35,12 +41,48 @@ const Gener: React.FC = () => {
   const [allMovies, setAllMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const moviesPerPage = 10;
   const navigate = useNavigate();
+  const textFieldRef = useRef<HTMLInputElement>(null);
 
   const genre = searchParams.get('genre') || 'Action';
-  const searchQuery = searchParams.get('query') || '';
   const currentPage = parseInt(searchParams.get('page') || '1', 10);
+
+  const fetchSuggestions = useCallback(
+    debounce(async (query: string) => {
+      if (!query) {
+        setSuggestions([]);
+        setShowSuggestions(false);
+        return;
+      }
+
+      try {
+        const { movies } = await searchMoviesByTitle(query);
+
+        const titles = movies.map((movie: Movie) => movie.title);
+
+        const results = fuzzball.extract(query, titles, {
+          scorer: fuzzball.partial_ratio,
+          limit: 5,
+          cutoff: 30, 
+          processor: (title: string) => title.toLowerCase(),
+        });
+
+        const suggestionTitles = results.map(([title]) => title);
+
+        setSuggestions(suggestionTitles);
+        setShowSuggestions(suggestionTitles.length > 0);
+      } catch (error) {
+        console.error(`Error fetching suggestions for query "${query}":`, error);
+        setSuggestions([]);
+        setShowSuggestions(false);
+      }
+    }, 300), 
+    []
+  );
 
   useEffect(() => {
     const fetchMovies = async () => {
@@ -75,26 +117,43 @@ const Gener: React.FC = () => {
     window.scrollTo(0, 0);
   }, [genre, searchQuery, currentPage]);
 
+  useEffect(() => {
+    fetchSuggestions(searchQuery);
+  }, [searchQuery, fetchSuggestions]);
+
   const handleDeleteMovie = (id: number) => {
     const updatedAllMovies = allMovies.filter((movie) => movie.id !== id);
     setAllMovies(updatedAllMovies);
-
-      const updatedMovies = movies.filter((movie) => movie.id !== id);
-      setMovies(updatedMovies);
+    const updatedMovies = movies.filter((movie) => movie.id !== id);
+    setMovies(updatedMovies);
   };
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const query = event.target.value;
-    setSearchParams({ genre, query, page: '1' });
+    setSearchQuery(query);
+    setSearchParams({ genre, page: '1' });
+  };
+
+  const handleSuggestionClick = (suggestion: string) => {
+    setSearchQuery(suggestion);
+    setSearchParams({ genre, page: '1' });
+    setShowSuggestions(false);
   };
 
   const handleGenreChange = (newGenre: string) => {
-    setSearchParams({ genre: newGenre, query: searchQuery, page: '1' });
+    setSearchQuery('');
+    setSuggestions([]);
+    setShowSuggestions(false);
+    setSearchParams({ genre: newGenre, page: '1' });
   };
 
   const handlePageChange = (event: React.ChangeEvent<unknown>, page: number) => {
-    setSearchParams({ genre, query: searchQuery, page: page.toString() });
+    setSearchParams({ genre, page: page.toString() });
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleTextFieldBlur = () => {
+    setTimeout(() => setShowSuggestions(false), 200);
   };
 
   return (
@@ -201,37 +260,73 @@ const Gener: React.FC = () => {
               </Button>
             </Box>
 
-            <TextField
-              placeholder="Search movies..."
-              value={searchQuery}
-              onChange={handleSearchChange}
-              sx={{
-                width: { xs: '100%', sm: '300px' },
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': { borderColor: '#facc15' },
-                  '&:hover fieldset': { borderColor: '#facc15' },
-                  '&.Mui-focused fieldset': { borderColor: '#facc15' },
-                },
-              }}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Search sx={{ color: '#facc15', fontSize: '20px' }} />
-                  </InputAdornment>
-                ),
-                sx: {
-                  color: '#fff',
-                  bgcolor: '#1e1e1e',
-                  borderRadius: '5px',
-                  fontSize: '0.9rem',
-                  height: '40px',
-                  '& .MuiInputBase-input::placeholder': {
-                    color: '#b0b0b0',
-                    fontSize: '0.9rem',
+            <Box sx={{ position: 'relative', width: { xs: '100%', sm: '300px' } }}>
+              <TextField
+                placeholder="Search movies..."
+                value={searchQuery}
+                onChange={handleSearchChange}
+                onBlur={handleTextFieldBlur}
+                inputRef={textFieldRef}
+                sx={{
+                  width: '100%',
+                  '& .MuiOutlinedInput-root': {
+                    '& fieldset': { borderColor: '#facc15' },
+                    '&:hover fieldset': { borderColor: '#facc15' },
+                    '&.Mui-focused fieldset': { borderColor: '#facc15' },
                   },
-                },
-              }}
-            />
+                }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Search sx={{ color: '#facc15', fontSize: '20px' }} />
+                    </InputAdornment>
+                  ),
+                  sx: {
+                    color: '#fff',
+                    bgcolor: '#1e1e1e',
+                    borderRadius: '5px',
+                    fontSize: '0.9rem',
+                    height: '40px',
+                    '& .MuiInputBase-input::placeholder': {
+                      color: '#b0b0b0',
+                      fontSize: '0.9rem',
+                    },
+                  },
+                }}
+              />
+              {showSuggestions && suggestions.length > 0 && (
+                <Paper
+                  sx={{
+                    position: 'absolute',
+                    top: '100%',
+                    left: 0,
+                    right: 0,
+                    zIndex: 10,
+                    bgcolor: '#1e1e1e',
+                    maxHeight: '200px',
+                    overflowY: 'auto',
+                    borderRadius: '5px',
+                    mt: 1,
+                  }}
+                >
+                  <List>
+                    {suggestions.map((suggestion) => (
+                      <ListItem
+                        key={suggestion}
+                        onClick={() => handleSuggestionClick(suggestion)}
+                        sx={{
+                          cursor: 'pointer',
+                          '&:hover': { bgcolor: '#facc15', color: '#000' },
+                          color: '#fff',
+                        }}
+                      >
+                        <ListItemText primary={suggestion} />
+                      </ListItem>
+                    ))}
+                  </List>
+                </Paper>
+              )}
+            </Box>
           </Box>
         </Box>
 
@@ -242,7 +337,7 @@ const Gener: React.FC = () => {
           </Box>
         ) : (
           <>
-            <Box className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-5 gap-2 sm:gap-4">
+            <Box className="grid grid-cols-1 gap-6 sm:grid-cols-1 md:grid-cols-5 md:gap-4 justify-items-center">
               {movies.length > 0 ? (
                 movies.map((movie: Movie) => (
                   <MovieItem
@@ -257,7 +352,7 @@ const Gener: React.FC = () => {
                     streaming_platform={movie.streaming_platform}
                     premium={movie.premium}
                     onClick={() => navigate(`/movie/${movie.id}`)}
-                    onDelete={handleDeleteMovie} 
+                    onDelete={handleDeleteMovie}
                   />
                 ))
               ) : (

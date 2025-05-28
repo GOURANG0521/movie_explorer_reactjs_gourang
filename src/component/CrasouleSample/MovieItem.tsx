@@ -194,16 +194,13 @@ const MovieItem: React.FC<MovieItemProps> = ({
         </>
       )}
       <img
-        src={image || 'https://via.placeholder.com/200x250?text=No+Image'}
+        src={image}
         alt={title}
         style={{
           width: '100%',
           height: 250,
           objectFit: 'cover',
           borderRadius: 8,
-        }}
-        onError={(e) => {
-          e.currentTarget.src = 'https://via.placeholder.com/200x250?text=No+Image';
         }}
       />
       <Typography sx={{ color: 'white', mt: 1, fontWeight: 'medium' }}>{title}</Typography>

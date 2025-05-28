@@ -46,7 +46,7 @@ export default function SubscriptionPage() {
     {
       id: '1_day',
       name: '1 Day Pass',
-      price: '199',
+      price: '₹199',
       features: [
         'Full access to all movies',
         'Unlimited streaming',
@@ -58,7 +58,7 @@ export default function SubscriptionPage() {
     {
       id: '1_month',
       name: '7 Day Pass',
-      price: '799',
+      price: '₹799',
       features: [
         'Full access to all movies',
         'Unlimited streaming',
@@ -71,7 +71,7 @@ export default function SubscriptionPage() {
     {
       id: '3_months',
       name: '1 Month Premium',
-      price: '1999',
+      price: '₹1999',
       features: [
         'Full access to all movies',
         'Early access to new releases',

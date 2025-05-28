@@ -12,8 +12,6 @@ import SubscriptionPage from './component/Pages/SubscriptionPage';
 import Success from './component/Pages/Success';
 import UserDashboard from './component/Pages/UserDashboard';
 import Header from './component/Common/Header';
-import { generateToken, messaging } from './notifications/firebase';
-import { onMessage } from 'firebase/messaging';
 import NotFound from './component/Pages/NotFound';
 
 function AppContent() {
@@ -56,21 +54,6 @@ function AppContent() {
 }
 
 function App() {
-  useEffect(() => {
-    generateToken();
-    onMessage(messaging, (payload) => {
-      console.log('Foreground message received:', payload);
-      if (Notification.permission === 'granted') {
-        const notificationTitle = payload.notification?.title || 'New Notification';
-        const notificationOptions = {
-          body: payload.notification?.body || 'You have a new message',
-          icon: payload.notification?.image || '/favicon.ico',
-        };
-        new Notification(notificationTitle, notificationOptions);
-      }
-    });
-  }, []);
-
   return (
     <Router>
       <AppContent />
