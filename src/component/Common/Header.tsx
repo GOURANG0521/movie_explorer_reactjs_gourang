@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaUser, FaSearch, FaBell } from 'react-icons/fa';
 import {
@@ -11,15 +11,20 @@ import {
   TextField,
   InputAdornment,
   Button,
+  Popover,
+  Box,
 } from '@mui/material';
-import { signOut, getSubscriptionStatus,toggleNotifications } from '../../utils/User';
+import { signOut, getSubscriptionStatus, toggleNotifications } from '../../utils/User';
 
 const Header: React.FC = () => {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [bellAnchorEl, setBellAnchorEl] = useState<null | HTMLElement>(null);
   const [role, setRole] = useState<string>('user');
   const [plan, setPlan] = useState<string>('basic');
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const bellRef = useRef<HTMLButtonElement>(null);
   const open = Boolean(anchorEl);
+  const openPopover = Boolean(bellAnchorEl);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -46,10 +51,19 @@ const Header: React.FC = () => {
         }
       }
       getSubscriptionStatus(token);
+
+      const timer = setTimeout(() => {
+        if (isLoggedIn) {
+          setBellAnchorEl(bellRef.current);
+        }
+      }, 5000);
+
+      
+      return () => clearTimeout(timer);
     } else {
       setIsLoggedIn(false);
     }
-  }, []);
+  }, [isLoggedIn]); 
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -85,12 +99,16 @@ const Header: React.FC = () => {
     }
   };
 
-  const handleNotifications = async () => {
-    try{
+  const handlePopoverClose = () => {
+    setBellAnchorEl(null);
+  };
+
+  const handleEnableNotifications = async () => {
+    try {
       await toggleNotifications();
-    }
-    catch(error){
-      console.error('toggle notification error:',error);
+      setBellAnchorEl(null);
+    } catch (error) {
+      console.error('Error enabling notifications:', error);
     }
   };
 
@@ -107,6 +125,7 @@ const Header: React.FC = () => {
             <Typography
               variant="h6"
               className="text-lg sm:text-2xl font-bold text-yellow-400"
+              sx={{ fontFamily: 'Roboto, sans-serif' }}
             >
               <span className="text-black bg-yellow-400 px-2 rounded">FILM</span> BIT
             </Typography>
@@ -116,36 +135,8 @@ const Header: React.FC = () => {
         <div className="flex-grow" />
 
         <div className="flex items-center space-x-2 sm:space-x-4">
-          {/* <TextField
-            placeholder="Search..."
-            size="small"
-            className="max-w-[150px] sm:max-w-xs"
-            sx={{
-              '& .MuiInputBase-root': {
-                backgroundColor: '#374151',
-                color: 'white',
-                borderRadius: '9999px',
-                padding: '2px 8px',
-                fontSize: { xs: '0.75rem', sm: '0.875rem' },
-              },
-              '& .MuiInputBase-input::placeholder': {
-                color: '#9ca3af',
-              },
-              '& .MuiOutlinedInput-notchedOutline': {
-                border: 'none',
-              },
-            }}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <FaSearch size={14} className="text-gray-400" />
-                </InputAdornment>
-              ),
-            }}
-            inputProps={{ 'aria-label': 'Search movies' }}
-          /> */}
-
           <IconButton
+            ref={bellRef}
             sx={{
               color: 'white',
               '&:hover': { color: '#facc15' },
@@ -175,6 +166,7 @@ const Header: React.FC = () => {
               sx: {
                 backgroundColor: '#1f2937',
                 color: 'white',
+                fontFamily: 'Roboto, sans-serif',
               },
             }}
           >
@@ -196,9 +188,6 @@ const Header: React.FC = () => {
                       Buy Subscription
                     </MenuItem>
                   ),
-                  // <MenuItem key="notification" onClick={handleNotifications}>
-                  //   Allow  <FaBell size={20} />
-                  // </MenuItem>,
                   <MenuItem key="logout" onClick={handleLogout}>
                     Logout
                   </MenuItem>,
@@ -211,11 +200,97 @@ const Header: React.FC = () => {
           </Menu>
         </div>
       </Toolbar>
+
+      <Popover
+        open={openPopover}
+        anchorEl={bellAnchorEl}
+        onClose={handlePopoverClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        PaperProps={{
+          sx: {
+            maxWidth: '300px',
+            backgroundColor: '#1f2937',
+            color: 'white',
+            borderRadius: '12px',
+            padding: '12px',
+            position: 'relative',
+            overflow: 'visible',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+            border: '2px solid transparent',
+            backgroundImage: 'linear-gradient(#1f2937, #1f2937), linear-gradient(45deg, #facc15, #f59e0b)',
+            backgroundOrigin: 'border-box',
+            backgroundClip: 'padding-box, border-box',
+            '&::before': {
+              content: '""',
+              position: 'absolute',
+              top: '-8px',
+              right: '8px',
+              border: '8px solid transparent',
+              borderBottomColor: '#facc15',
+            },
+            fontFamily: 'Roboto, sans-serif',
+          },
+        }}
+      >
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <Typography
+            variant="h6"
+            sx={{ fontWeight: '600', fontSize: '1.1rem', lineHeight: '1.4' }}
+          >
+            Receive Notifications?
+          </Typography>
+          <Typography variant="body2" sx={{ fontSize: '0.9rem', opacity: 0.9 }}>
+            Stay updated with the latest alerts and updates by enabling notifications.
+          </Typography>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
+            <Button
+              onClick={handlePopoverClose}
+              sx={{
+                backgroundColor: '#facc15',
+                color: '#000000',
+                borderRadius: '20px',
+                padding: '6px 16px',
+                fontSize: '0.8rem',
+                textTransform: 'none',
+                transition: 'transform 0.2s',
+                '&:hover': {
+                  backgroundColor: '#e0b013',
+                  transform: 'scale(1.05)',
+                },
+              }}
+            >
+              No
+            </Button>
+            <Button
+              onClick={handleEnableNotifications}
+              sx={{
+                backgroundColor: '#facc15',
+                color: '#000000',
+                borderRadius: '20px',
+                padding: '6px 16px',
+                fontSize: '0.8rem',
+                textTransform: 'none',
+                transition: 'transform 0.2s',
+                '&:hover': {
+                  backgroundColor: '#e0b013',
+                  transform: 'scale(1.05)',
+                },
+              }}
+            >
+              Yes
+            </Button>
+          </Box>
+        </Box>
+      </Popover>
     </AppBar>
   );
 };
 
 export default Header;
-
-
-
