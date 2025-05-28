@@ -65,7 +65,7 @@ const Header: React.FC = () => {
   };
 
   const handleHomeRedirect = (): void => {
-    navigate('/home');
+    navigate('/');
   };
 
   const handleSubscription = (): void => {
@@ -79,7 +79,7 @@ const Header: React.FC = () => {
   const handleLogout = async () => {
     try {
       await signOut();
-      navigate('/');
+      navigate('/login');
     } catch (error) {
       console.error('Logout error:', error);
     }
@@ -95,7 +95,7 @@ const Header: React.FC = () => {
   };
 
   const handleLoginSignup = () => {
-    navigate('/');
+    navigate('/login');
     handleClose();
   };
 

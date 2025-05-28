@@ -74,7 +74,7 @@ const AdminPage: React.FC = () => {
     const token = localStorage.getItem("token");
     if (!token) {
       console.error("Please sign in to add or edit a movie.");
-      navigate("/");
+      navigate("/login");
       return;
     }
 
@@ -184,7 +184,7 @@ const AdminPage: React.FC = () => {
   };
 
   const handleCancel = () => {
-    navigate("/home");
+    navigate("/");
   };
 
   return (

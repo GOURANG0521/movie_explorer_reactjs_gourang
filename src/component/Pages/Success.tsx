@@ -154,7 +154,7 @@ const Success = () => {
                   color="primary"
                   size="large"
                   fullWidth
-                  onClick={() => (window.location.href = '/home')}
+                  onClick={() => (window.location.href = '/')}
                   sx={{
                     bgcolor: '#E50914',
                     '&:hover': { bgcolor: '#c7000d' },

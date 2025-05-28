@@ -76,7 +76,7 @@ const UserDashboard = () => {
   const handleSignOut = async () => {
     try {
       await signOut();
-      navigate('/');
+      navigate('/login');
     } catch (err) {
       console.error('error while logout', err);
     }

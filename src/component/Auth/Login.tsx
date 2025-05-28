@@ -86,7 +86,7 @@ const Login: React.FC = () => {
         position: 'top-right',
         autoClose: 3000,
       });
-      navigate('/home');
+      navigate('/');
     } catch (error: any) {
       const errorMessage = error.message || 'An error occurred during login. Please try again.';
       setLoginError(errorMessage);

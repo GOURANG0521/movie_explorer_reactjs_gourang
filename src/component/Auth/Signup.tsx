@@ -46,7 +46,7 @@ const Signup: React.FC = () => {
   const [signUpError, setSignUpError] = useState<string>('');
 
   const handleLogin = (): void => {
-    navigate('/');
+    navigate('/login');
   };
 
   const handleNameChange = (e: ChangeEvent<HTMLInputElement>): void => {
@@ -143,7 +143,7 @@ const Signup: React.FC = () => {
         position: 'top-right',
         autoClose: 3000,
       });
-      navigate('/');
+      navigate('/login');
     } catch (error: any) {
       const errorMessage = error.message || 'An error occurred during signup. Please try again.';
       setSignUpError(errorMessage);

@@ -17,7 +17,7 @@ import NotFound from './component/Pages/NotFound';
 function AppContent() {
   const location = useLocation();
   
-  const hideHeaderPaths = ["/", "/signup","*"];
+  const hideHeaderPaths = ["/login", "/signup","*"];
   
   const showHeader = !hideHeaderPaths.includes(location.pathname);
 
@@ -37,9 +37,9 @@ function AppContent() {
         theme="dark"
       />
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<Dashboard />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/home" element={<Dashboard />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/movie/:id" element={<MovieDetailPage />} />
         <Route path="/admin" element={<AdminPage />} />
         <Route path="/admin/:id" element={<AdminPage />} />
