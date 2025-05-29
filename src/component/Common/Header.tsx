@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaUser, FaSearch, FaBell } from 'react-icons/fa';
+import { FaUser, FaBell } from 'react-icons/fa';
 import {
   AppBar,
   Toolbar,
@@ -8,8 +8,6 @@ import {
   IconButton,
   Menu,
   MenuItem,
-  TextField,
-  InputAdornment,
   Button,
   Popover,
   Box,
@@ -19,12 +17,15 @@ import { signOut, getSubscriptionStatus, toggleNotifications } from '../../utils
 const Header: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [bellAnchorEl, setBellAnchorEl] = useState<null | HTMLElement>(null);
+  const [userAnchorEl, setUserAnchorEl] = useState<null | HTMLElement>(null);
   const [role, setRole] = useState<string>('user');
   const [plan, setPlan] = useState<string>('basic');
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const bellRef = useRef<HTMLButtonElement>(null);
+  const userRef = useRef<HTMLButtonElement>(null);
   const open = Boolean(anchorEl);
-  const openPopover = Boolean(bellAnchorEl);
+  const openBellPopover = Boolean(bellAnchorEl);
+  const openUserPopover = Boolean(userAnchorEl);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -55,15 +56,20 @@ const Header: React.FC = () => {
       const timer = setTimeout(() => {
         if (isLoggedIn) {
           setBellAnchorEl(bellRef.current);
+        } else {
+          setUserAnchorEl(userRef.current);
         }
       }, 5000);
 
-      
       return () => clearTimeout(timer);
     } else {
       setIsLoggedIn(false);
+      const timer = setTimeout(() => {
+        setUserAnchorEl(userRef.current);
+      }, 5000);
+      return () => clearTimeout(timer);
     }
-  }, [isLoggedIn]); 
+  }, [isLoggedIn]);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -99,8 +105,12 @@ const Header: React.FC = () => {
     }
   };
 
-  const handlePopoverClose = () => {
+  const handleBellPopoverClose = () => {
     setBellAnchorEl(null);
+  };
+
+  const handleUserPopoverClose = () => {
+    setUserAnchorEl(null);
   };
 
   const handleEnableNotifications = async () => {
@@ -115,6 +125,7 @@ const Header: React.FC = () => {
   const handleLoginSignup = () => {
     navigate('/login');
     handleClose();
+    handleUserPopoverClose();
   };
 
   return (
@@ -148,6 +159,7 @@ const Header: React.FC = () => {
           </IconButton>
 
           <IconButton
+            ref={userRef}
             onClick={handleClick}
             sx={{
               color: 'white',
@@ -202,9 +214,9 @@ const Header: React.FC = () => {
       </Toolbar>
 
       <Popover
-        open={openPopover}
+        open={openBellPopover}
         anchorEl={bellAnchorEl}
-        onClose={handlePopoverClose}
+        onClose={handleBellPopoverClose}
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'right',
@@ -251,7 +263,7 @@ const Header: React.FC = () => {
           </Typography>
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
             <Button
-              onClick={handlePopoverClose}
+              onClick={handleBellPopoverClose}
               sx={{
                 backgroundColor: '#facc15',
                 color: '#000000',
@@ -285,6 +297,95 @@ const Header: React.FC = () => {
               }}
             >
               Yes
+            </Button>
+          </Box>
+        </Box>
+      </Popover>
+
+      <Popover
+        open={openUserPopover}
+        anchorEl={userAnchorEl}
+        onClose={handleUserPopoverClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        PaperProps={{
+          sx: {
+            maxWidth: '300px',
+            backgroundColor: '#1f2937',
+            color: 'white',
+            borderRadius: '12px',
+            padding: '12px',
+            position: 'relative',
+            overflow: 'visible',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+            border: '2px solid transparent',
+            backgroundImage: 'linear-gradient(#1f2937, #1f2937), linear-gradient(45deg, #facc15, #f59e0b)',
+            backgroundOrigin: 'border-box',
+            backgroundClip: 'padding-box, border-box',
+            '&::before': {
+              content: '""',
+              position: 'absolute',
+              top: '-8px',
+              right: '8px',
+              border: '8px solid transparent',
+              borderBottomColor: '#facc15',
+            },
+            fontFamily: 'Roboto, sans-serif',
+          },
+        }}
+      >
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <Typography
+            variant="h6"
+            sx={{ fontWeight: '600', fontSize: '1.1rem', lineHeight: '1.4' }}
+          >
+            Login Required
+          </Typography>
+          <Typography variant="body2" sx={{ fontSize: '0.9rem', opacity: 0.9 }}>
+            Please login to see exclusive content.
+          </Typography>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
+            <Button
+              onClick={handleUserPopoverClose}
+              sx={{
+                backgroundColor: '#facc15',
+                color: '#000000',
+                borderRadius: '20px',
+                padding: '6px 16px',
+                fontSize: '0.8rem',
+                textTransform: 'none',
+                transition: 'transform 0.2s',
+                '&:hover': {
+                  backgroundColor: '#e0b013',
+                  transform: 'scale(1.05)',
+                },
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleLoginSignup}
+              sx={{
+                backgroundColor: '#facc15',
+                color: '#000000',
+                borderRadius: '20px',
+                padding: '6px 16px',
+                fontSize: '0.8rem',
+                textTransform: 'none',
+                transition: 'transform 0.2s',
+                '&:hover': {
+                  backgroundColor: '#e0b013',
+                  transform: 'scale(1.05)',
+                },
+              }}
+            >
+              Login
             </Button>
           </Box>
         </Box>
